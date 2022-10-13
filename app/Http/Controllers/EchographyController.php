@@ -86,6 +86,7 @@ class EchographyController extends Controller
             'amount' => $request->amount ?: ($echo_type ? $echo_type->price : 0),
             'attribute' => $echo_type ? $echo_type->attribite : null,
 			'status' => 1,
+			'age' => $request->age ?: 0,
 		])) {
 
 			$path = public_path('/images/echographies/');

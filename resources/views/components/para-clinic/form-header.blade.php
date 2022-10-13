@@ -45,6 +45,14 @@
 	</td>
 </tr>
 <tr>
+	<td class="text-right">Age</td>
+	<td>
+		<x-bss-form.input name='age' value="{{ $row->age ?? '' }}" :disabled="$isEdit && $row->age"/>
+	</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td class="text-right">Requested by <small class='required'>*</small></td>
 	<td>
 		<x-bss-form.select name="requested_by" required :disabled="$isEdit && $row->requested_by">
@@ -61,7 +69,7 @@
 		<x-bss-form.select name="doctor_id" :disabled="$isEdit && $row->doctor_id">
 			<option value="">Please choose</option>
 			@foreach ($doctor as $data)
-				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
+				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
 			@endforeach
 		</x-bss-form.select>
 	</td>

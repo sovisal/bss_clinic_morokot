@@ -71,6 +71,7 @@ class XrayController extends Controller
 			'amount' => $request->amount ?: ($xray_type ? $xray_type->price : 0),
 			'attribute' => $xray_type ? $xray_type->attribite : null,
 			'status' => 1,
+			'age' => $request->age ?: 0,
 		])) {
 			if ($request->is_treament_plan) {
 				return redirect()->route('patient.consultation.edit', $request->consultation_id)->with('success', 'Data created success');
