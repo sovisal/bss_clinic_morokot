@@ -16,8 +16,8 @@ class DoctorSeeder extends Seeder
     {
 		Doctor::insert([
 			[
-				'name_kh' => 'គ្រួគ ពុទ្ធា',
-				'name_en' => 'Krouk Puthea',
+				'name_kh' => 'អយ ប៊ុនធូ',
+				'name_en' => 'AY BUNTHOU',
 				'created_by' => 1,
 				'updated_by' => 1,
 				'created_at' => now(),

@@ -29,7 +29,7 @@
                     <x-bss-form.select name="doctor_id" required id="echo_doctor_id">
                         <option value="">Please choose</option>
                         @foreach ($doctors as $data)
-                            <option value="{{ $data->id }}">{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
+                            <option value="{{ $data->id }}" {{ Auth()->user()->doctor == $data->id ? 'selected' : '' }}>{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
                         @endforeach
                     </x-bss-form.select>
                 </td>
