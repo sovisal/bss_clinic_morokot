@@ -32,7 +32,7 @@
 		<x-bss-form.select name="doctor_id" :disabled="$is_edit && $row->doctor_id">
 			<option value="">Please choose</option>
 			@foreach ($doctor as $data)
-				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
+				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
 			@endforeach
 		</x-bss-form.select>
 	</td>
@@ -44,7 +44,7 @@
 	</td>
 	<td class="text-right">Analysis date</td>
 	<td>
-		<x-bss-form.input name='analysis_at' class="date-time-picker" hasIcon="right" icon="bx bx-calendar" value="{{ $row->analysis_at ?? null }}" />
+		<x-bss-form.input name='analysis_at' class="date-time-picker" hasIcon="right" icon="bx bx-calendar" value="{{ $row->analysis_at ?? date('Y-m-d H:i:s') ?? null }}" />
 	</td>
 </tr>
 <tr>
