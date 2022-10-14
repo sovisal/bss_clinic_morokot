@@ -8,12 +8,12 @@ use App\Http\Controllers\FourLevelAddressController;
 
 Route::middleware(['auth'])->name('setting.')->group(function () {
 	
-	Route::prefix('setting')->group(function () {
+	Route::prefix('setting')->middleware(['can:DeveloperMode'])->group(function () {
 		Route::get('/', [HomeController::class, 'setting'])->name('edit');
 		Route::put('/update', [HomeController::class, 'setting_update'])->name('update');
 	});
 
-	Route::middleware(['auth'])->prefix('address')->group(function () {
+	Route::middleware(['auth', 'can:DeveloperMode'])->prefix('address')->group(function () {
 		Route::get('/', [FourLevelAddressController::class, 'index'])->name('address.index');
 		Route::post('/getFullAddress', [FourLevelAddressController::class, 'BSSFullAddress'])->name('getFullAddress');
 		Route::post('/getProvinceChileSelection', [FourLevelAddressController::class, 'District'])->name('getProvinceChileSelection');
@@ -22,7 +22,7 @@ Route::middleware(['auth'])->name('setting.')->group(function () {
 	});
 
 	Route::prefix('doctor')->name('doctor.')->group(function () {
-		Route::get('/', [DoctorController::class, 'index'])->name('index');
+		Route::get('/', [DoctorController::class, 'index'])->name('index')->middleware('can:ViewAnyDoctor');
 		Route::get('/create', [DoctorController::class, 'create'])->name('create')->middleware('can:CreateDoctor');
 		Route::post('/store', [DoctorController::class, 'store'])->name('store')->middleware('can:CreateDoctor');
 		Route::get('/{doctor}/edit', [DoctorController::class, 'edit'])->name('edit')->middleware('can:UpdateDoctor');
@@ -33,7 +33,7 @@ Route::middleware(['auth'])->name('setting.')->group(function () {
 	});
 
 	Route::prefix('medicine')->name('medicine.')->group(function () {
-		Route::get('/', [MedicineController::class, 'index'])->name('index');
+		Route::get('/', [MedicineController::class, 'index'])->name('index')->middleware('can:ViewAnyMedicine');
 		Route::get('/create', [MedicineController::class, 'create'])->name('create')->middleware('can:CreateMedicine');
 		Route::post('/store', [MedicineController::class, 'store'])->name('store')->middleware('can:CreateMedicine');
 		Route::get('/{medicine}/edit', [MedicineController::class, 'edit'])->name('edit')->middleware('can:UpdateMedicine');

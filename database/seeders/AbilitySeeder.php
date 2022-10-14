@@ -30,9 +30,15 @@ class AbilitySeeder extends Seeder
 			['module' => 'LaborServiceCategory'],
 			['module' => 'ParaClinic'],
 			['module' => 'Prescription'],
+			['module' => 'Medicine'],
 		]);
 
 		Ability::insert([
+
+			['ability_module_id' => '14', 'category' => 'ViewAny', 'name' => 'ViewAnyMedicine', 'label' => 'Medicine View List'],
+			['ability_module_id' => '14', 'category' => 'Create', 'name' => 'CreateMedicine', 'label' => 'Medicine Create'],
+			['ability_module_id' => '14', 'category' => 'Update', 'name' => 'UpdateMedicine', 'label' => 'Medicine Update'],
+			['ability_module_id' => '14', 'category' => 'Delete', 'name' => 'DeleteMedicine', 'label' => 'Medicine Delete'],
 
 			['ability_module_id' => '13', 'category' => 'ViewAny', 'name' => 'ViewAnyPrescription', 'label' => 'Prescription View List'],
 			['ability_module_id' => '13', 'category' => 'Create', 'name' => 'CreatePrescription', 'label' => 'Prescription Create'],

@@ -93,43 +93,43 @@ class AppLayout extends Component
 			],
 
 			'setting' => [
-				'can' => 'DeveloperMode',
-				'url' => route('setting.edit'),
+				'can' => 'ViewAnyDoctor',
+				'url' => route('setting.doctor.index'),
 				'label' => 'Setting',
 
 				'sub' => [
 					'setting' => [
-						'can' => 'UpdateSetting',
+						'can' => 'DeveloperMode',
 						'url' => route('setting.edit'),
 						'name' => ['edit'],
 						'label' => 'Setting',
 					],
 					'labor-item' => [
-						'can' => 'UpdateSetting',
+						'can' => 'DeveloperMode',
 						'url' => route('setting.labor-item.index'),
 						'name' => ['index', 'create', 'edit'],
 						'label' => 'Labor Template',
 					],
 					'echo-type' => [
-						'can' => 'UpdateSetting',
+						'can' => 'DeveloperMode',
 						'url' => route('setting.echo-type.index'),
 						'name' => ['index', 'create', 'edit'],
 						'label' => 'Echo Template',
 					],
 					'ecg-type' => [
-						'can' => 'UpdateSetting',
+						'can' => 'DeveloperMode',
 						'url' => route('setting.ecg-type.index'),
 						'name' => ['index', 'create', 'edit'],
 						'label' => 'ECG Template',
 					],
 					'xray-type' => [
-						'can' => 'UpdateSetting',
+						'can' => 'DeveloperMode',
 						'url' => route('setting.xray-type.index'),
 						'name' => ['index', 'create', 'edit'],
 						'label' => 'Xray Template',
 					],
 					'data-parent' => [
-						'can' => 'UpdateSetting',
+						'can' => 'DeveloperMode',
 						'url' => route('setting.data-parent.index'),
 						'name' => ['index', 'create', 'edit'],
 						'label' => 'Data Selection',
@@ -147,7 +147,7 @@ class AppLayout extends Component
 						'label' => 'Medicine',
 					],
 					'address' => [
-						'can' => 'UpdateSetting', // not yet create abilities
+						'can' => 'DeveloperMode', // not yet create abilities
 						'url' => route('setting.address.index'),
 						'name' => ['index', 'create', 'edit'],
 						'label' => 'Address',

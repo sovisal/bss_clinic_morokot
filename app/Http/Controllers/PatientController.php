@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Models\Consultation;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\PatientRequest;
 use Intervention\Image\Facades\Image;
@@ -22,7 +21,7 @@ class PatientController extends Controller
 				'updatedBy.name AS updated_by_name',
 			])
 				->join('users AS updatedBy', 'updatedBy.id', '=', 'patients.updated_by')
-				->orderBy('name_kh', 'asc')->get()
+				->orderBy('id', 'desc')->get()
 		];
 		return view('patient.index', $data);
 	}

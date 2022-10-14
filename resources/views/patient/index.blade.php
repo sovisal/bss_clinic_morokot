@@ -11,6 +11,7 @@
 		<x-table class="table-hover table-bordered table-padding-sm" id="datatables" data-table="patients">
 			<x-slot name="thead">
 				<tr>
+					<th>N&deg;</th>
 					<th>Code</th>
 					<th>Name EN + Name KH</th>
 					<th>Date of birth</th>
@@ -33,6 +34,9 @@
 				@endphp
 				<tr>
 					<td class="text-center">
+						{{ ++$key }}
+					</td>
+					<td class="text-center">
 						<a href="{{ route('patient.consultation.edit', $consultant) }}">
 							PT-{!! str_pad($patient->id, 6, '0', STR_PAD_LEFT) !!}
 						</a>
@@ -42,7 +46,7 @@
 					<td class="text-center">{!! getParentDataByType('gender', $patient->gender) !!}</td>
 					<td>{!! $patient->phone !!}</td>
 					<td>{!! getParentDataByType('nationality', $patient->nationality) !!}</td>
-					<td class="text-center">{!! date('d-M-Y H:i', strtotime($patient->registered_at)) !!}</td>
+					<td class="text-center">{!! (($patient->registered_at!==null)? date('d-M-Y H:i', strtotime($patient->registered_at)) : '-') !!}</td>
 					<!-- <td>{!! date('d-M-Y H:i', strtotime($patient->updated_at)) !!}</td> -->
 					<!-- <td>{!! $patient->updated_by_name !!}</td> -->
 					<td class="text-center">{!! render_record_status($status) !!}</td>
