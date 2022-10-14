@@ -52,13 +52,18 @@ class MedicineController extends Controller
 			'created_by' => auth()->user()->id,
 			'updated_by' => auth()->user()->id,
 		]);
-		$url = route('setting.medicine.index');
-		if ($request->save_opt == 'save_create') {
-			$url = route('setting.medicine.create');
-		}else if($request->save_opt == 'save_edit'){
-			$url = route('setting.medicine.edit', $medicine->id);
+
+		if ($request->ajax()) {
+			return $medicine;
+		} else {
+			$url = route('setting.medicine.index');
+			if ($request->save_opt == 'save_create') {
+				$url = route('setting.medicine.create');
+			}else if($request->save_opt == 'save_edit'){
+				$url = route('setting.medicine.edit', $medicine->id);
+			}
+			return redirect($url)->with('success', __('alert.message.success.crud.create'));
 		}
-		return redirect($url)->with('success', __('alert.message.success.crud.create'));
 	}
 
 	/**

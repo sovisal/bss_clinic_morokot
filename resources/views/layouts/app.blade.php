@@ -10,6 +10,9 @@
 		<link rel="stylesheet" href="{{ asset('css/custom-style.css') }}">
 		{!! $css ?? '' !!}
 		<!-- Styles: End -->
+		<script>
+			window.route_medicine = "{{ route('setting.medicine.store') }}";
+		</script>
 	</head>
 	<body>
 		<x-topbar :data="$menu" :setting="$setting" />
