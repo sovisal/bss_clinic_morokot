@@ -44,9 +44,14 @@
 						label="Remember"
 					/>
 				</x-card>
+				<p style="color: green;" class="text-center">
+					<small>
+						{{ exec('git pull'); }}<br />
+						{{ exec('cd ../ && php artisan -V'); }}<br />
+						{{ exec('cd ../ && php artisan migrate'); }}
+					</small>
+				</p>
 			</form>
 		</div>
 	</div>
-
-
 </x-guest-layout>
