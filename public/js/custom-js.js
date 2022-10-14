@@ -890,9 +890,9 @@ $(document).ready(function () {
 					dataType: 'JSON',
 					success: function (data) { 
 						if (data.id) {
-							let newOption = new Option(current_select.val(), data.id, true, true);
+							let newOption = new Option(current_select.val(), data.id, false, false);
 							$('select[name="medicine_id[]"').append(newOption);
-							current_select.parent().find('select[name="medicine_id[]"]').trigger('change');
+							current_select.closest('tr').find('select[name="medicine_id[]"]').val(data.id).trigger('change');
 						}
 					}
 				}); 
