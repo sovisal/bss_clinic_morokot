@@ -163,6 +163,10 @@ function printPopup(url) {
 	var sched = setInterval(printAndClose, 1000);
 };
 
+function previewPopup(url) {
+	var printWindow = window.open(url, 'To Print', "width="+ screen.availWidth +",height="+ screen.availHeight +",_blank");
+};
+
 // Start Initial Toastr
 function flashMsg(type='success', title, text) {
 	var toastrConfig = {

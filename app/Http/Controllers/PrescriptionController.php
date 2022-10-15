@@ -57,7 +57,7 @@ class PrescriptionController extends Controller
 			'patient_id' => $request->patient_id,
 			'requested_by' => $request->requested_by ?: auth()->user()->doctor ?? 0,
 			'requested_at' => $request->requested_at ?: date('Y-m-d H:i:s'),
-			'doctor_id' => $request->doctor_id ?: 0,
+			'doctor_id' => $request->doctor_id ?:  auth()->user()->doctor ?? 0,
 			'analysis_at' => $request->analysis_at ?: null,
 			'diagnosis' => $request->diagnosis,
 			// 'attribite' => $request->attribite,

@@ -27,7 +27,7 @@
                 <td class="text-right"><small class="required">*</small> Analysed by</td>
                 <td>
                     <x-bss-form.select name="doctor_id" required id="xray_doctor_id">
-                        <option value="">Please choose</option>
+                        {{-- <option value="">Please choose</option> --}}
                         @foreach ($doctors as $data)
                             <option value="{{ $data->id }}" {{ Auth()->user()->doctor == $data->id ? 'selected' : '' }}>{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
                         @endforeach

@@ -46,11 +46,13 @@
 				<span class="align-middle">Detail</span>
 			</a>
 		</li>
-		<!-- <li class="nav-item">
-			<a class="nav-link btn-sm" id="visit-tab" data-toggle="tab" href="#visit" aria-controls="visit" role="tab" aria-selected="false">
-				<span class="align-middle">Visit</span>
+		<li class="nav-item">
+			<a class="nav-link btn-sm" id="history-tab" data-toggle="tab" href="#history" aria-controls="history" role="tab" aria-selected="false">
+				<span class="align-middle">History</span>
 			</a>
 		</li>
+
+		<!-- 
 		<li class="nav-item">
 			<a class="nav-link btn-sm" id="prescription-tab" data-toggle="tab" href="#prescription" aria-controls="prescription" role="tab" aria-selected="false">
 				<span class="align-middle">Prescription</span>
@@ -132,8 +134,41 @@
 					</tr>
 				</table>
 			</div>
-			<div class="tab-pane" id="visit" aria-labelledby="visit-tab" role="tabpanel">
-				{{-- <x-form.button href="{{ route('patient.consultation.create', ['patient' => $patient->id]) }}" icon="bx bx-plus" label="New Follow up" /> --}}
+			<div class="tab-pane" id="history" aria-labelledby="history-tab" role="tabpanel">
+				<x-table class="table-hover table-bordered" id="datatables" data-table="patients">
+					<x-slot name="thead">
+						<tr>
+							<th>No</th>
+							<th>Code</th>
+							<th>Patient</th>
+							<th>Requested By</th>
+							<th>Requested Date</th>
+							<th>Analysis Date</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+					</x-slot>
+					@foreach($patient->history() as $key => $row)
+						<tr>
+							<td class="text-center">{{ ++$key }}</td>
+							<td>{{ $row->code }}</td>
+							<td>{{ render_synonyms_name($row->patient_en, $row->patient_kh) }}</td>
+							<td>{{ render_synonyms_name($row->requester_en, $row->requester_kh) }}</td>
+							<td class="text-center">{{ render_readable_date($row->requested_at) }}</td>
+							<td class="text-center">{{ render_readable_date($row->analysis_at) }}</td>
+							<td class="text-center">{!! render_record_status($row->status) !!}</td>
+							<td class="text-center">
+								<a href="javascript:void(0);" onclick="previewPopup('{{ $row->url }}')">
+									{{ Str::upper($row->row_type) }}
+								</a>
+							</td>
+						</tr>
+					@endforeach
+				</x-table>
+			</div>
+
+			
+			{{-- <div class="tab-pane" id="visit" aria-labelledby="visit-tab" role="tabpanel">
 				
 				<x-table class="mt-1 table-padding-sm">
 					<x-slot name="thead">
@@ -177,7 +212,7 @@
 			</div>
 			<div class="tab-pane" id="invoice" aria-labelledby="invoice-tab" role="tabpanel">
 				Invoices
-			</div>
+			</div> --}}
 		</div>
 	</x-card>
 

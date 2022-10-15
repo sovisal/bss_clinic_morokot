@@ -6,6 +6,7 @@ use App\Models\Patient;
 use App\Models\Consultation;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\PatientRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Intervention\Image\Facades\Image;
 
 class PatientController extends Controller
@@ -107,6 +108,53 @@ class PatientController extends Controller
 	 */
 	public function show(Patient $patient)
 	{
+		$patient->load([
+			'prescriptions' => function($q){
+				$q->select([
+					'prescriptions.*', 
+					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+				])
+				->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
+				->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id');
+			},
+			'labors' => function($q){
+				$q->select([
+					'laboratories.*', 
+					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+				])
+				->leftJoin('patients', 'patients.id', '=', 'laboratories.patient_id')
+				->leftJoin('doctors', 'doctors.id', '=', 'laboratories.doctor_id');
+			},
+			'xrays' => function($q){
+				$q->select([
+					'xrays.*', 
+					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+				])
+				->leftJoin('patients', 'patients.id', '=', 'xrays.patient_id')
+				->leftJoin('doctors', 'doctors.id', '=', 'xrays.doctor_id');
+			},
+			'echos' => function($q){
+				$q->select([
+					'echographies.*', 
+					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+				])
+				->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
+				->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id');
+			},
+			'ecgs' => function($q){
+				$q->select([
+					'ecgs.*', 
+					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+				])
+				->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
+				->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id');
+			},
+		]);
 		$consultation = Consultation::where('patient_id', $patient->id)->get();
 		$save_consultation = $consultation->where('status', 1)->first();
 		$exist_consultation = $consultation->first();
@@ -115,6 +163,35 @@ class PatientController extends Controller
 		} else if (!$exist_consultation) {
 			return redirect()->route('patient.consultation.create', ['patient' => $patient->id]);
 		}
+
+		
+		$history = new Collection;
+		$history = $history->concat($patient->prescriptions->map(function($row){
+			$row->row_type = 'prescription';
+			$row->url = route('prescription.print', $row->id);
+			return $row;
+		} ));
+		$history = $history->concat($patient->labors->map(function($row){
+			$row->row_type = 'labor';
+			$row->url = route('para_clinic.labor.print', $row->id);
+			return $row;
+		} ));
+		$history = $history->concat($patient->xrays->map(function($row){
+			$row->row_type = 'xray';
+			$row->url = route('para_clinic.xray.print', $row->id);
+			return $row;
+		} ));
+		$history = $history->concat($patient->echos->map(function($row){
+			$row->row_type = 'echo';
+			$row->url = route('para_clinic.echography.print', $row->id);
+			return $row;
+		} ));
+		$history = $history->concat($patient->ecgs->map(function($row){
+			$row->row_type = 'ecg';
+			$row->route_name = 'para_clinic.ecg';
+			return $row;
+		} ));
+		$patient->history = $history->sortByDesc('requested_at');
 
 		$data = [
 			'patient' => $patient,

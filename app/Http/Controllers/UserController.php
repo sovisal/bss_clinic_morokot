@@ -120,7 +120,7 @@ class UserController extends Controller
 			'is_suspended' => ($request->is_suspended == 'on' ? true : false),
 			'address' => $request->address,
 			'bio' => $request->bio,
-			'doctor' => $request->doctor_id ?: 0
+			'doctor' => $request->doctor_id ?:  auth()->user()->doctor ?? 0
 		]);
 		return back()->with('success', __('alert.message.success.crud.update'));
 	}

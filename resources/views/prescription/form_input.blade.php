@@ -19,9 +19,9 @@
 	<td class="text-right">Requested by <small class='required'>*</small></td>
 	<td>
 		<x-bss-form.select name="requested_by" required :disabled="$is_edit && $row->requested_by">
-			@if (!$is_edit)
+			{{-- @if (!$is_edit)
 				<option value="">Please choose</option>
-			@endif
+			@endif --}}
 			@foreach ($doctor as $data)
 				<option value="{{ $data->id }}" {{ ($row->requested_by ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
 			@endforeach
@@ -30,7 +30,7 @@
 	<td class="text-right">Analysis by</td>
 	<td>
 		<x-bss-form.select name="doctor_id" :disabled="$is_edit && $row->doctor_id">
-			<option value="">Please choose</option>
+			{{-- <option value="">Please choose</option> --}}
 			@foreach ($doctor as $data)
 				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
 			@endforeach
