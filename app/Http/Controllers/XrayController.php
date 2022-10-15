@@ -20,20 +20,21 @@ class XrayController extends Controller
 	public function index()
 	{
 		$this->data['rows'] = Xray::where('xrays.status', '>=' , 1)
-		->select([
-			'xrays.*', 
-			'patients.name_en as patient_en', 
-			'patients.name_kh as patient_kh', 
-			'doctors.name_en as doctor_en',
-			'doctors.name_kh as doctor_kh',
-			'xray_types.name_en as type_en',
-			'xray_types.name_kh as type_kh'
-		])
-		->leftJoin('patients', 'patients.id', '=', 'xrays.patient_id')
-		->leftJoin('doctors', 'doctors.id', '=', 'xrays.doctor_id')
-		->leftJoin('xray_types', 'xray_types.id', '=', 'xrays.type')
-		->orderBy('xrays.id', 'desc')
-		->get();
+			->select([
+				'xrays.*', 
+				'patients.name_en as patient_en', 
+				'patients.name_kh as patient_kh', 
+				'doctors.name_en as doctor_en',
+				'doctors.name_kh as doctor_kh',
+				'xray_types.name_en as type_en',
+				'xray_types.name_kh as type_kh'
+			])
+			->filter()
+			->leftJoin('patients', 'patients.id', '=', 'xrays.patient_id')
+			->leftJoin('doctors', 'doctors.id', '=', 'xrays.doctor_id')
+			->leftJoin('xray_types', 'xray_types.id', '=', 'xrays.type')
+			->orderBy('xrays.id', 'desc')
+			->get();
 		return view('xray.index', $this->data);
 	}
 

@@ -21,20 +21,21 @@ class EchographyController extends Controller
 	public function index()
 	{
 		$this->data['rows'] = Echography::select([
-			'echographies.*', 
-			'patients.name_en as patient_en', 
-			'patients.name_kh as patient_kh', 
-			'doctors.name_en as doctor_en',
-			'doctors.name_kh as doctor_kh',
-			'echo_types.name_en as type_en',
-			'echo_types.name_kh as type_kh'
-		])
-		->where('echographies.status', '>=' , 1) //1-Draft, 2-Completed, Helper function render_record_status()
-		->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
-		->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id')
-		->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
-		->orderBy('echographies.id', 'desc')
-		->get();
+				'echographies.*', 
+				'patients.name_en as patient_en', 
+				'patients.name_kh as patient_kh', 
+				'doctors.name_en as doctor_en',
+				'doctors.name_kh as doctor_kh',
+				'echo_types.name_en as type_en',
+				'echo_types.name_kh as type_kh'
+			])
+			->filter()
+			->where('echographies.status', '>=' , 1) //1-Draft, 2-Completed, Helper function render_record_status()
+			->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
+			->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id')
+			->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
+			->orderBy('echographies.id', 'desc')
+			->get();
 		return view('echography.index', $this->data);
 	}
 

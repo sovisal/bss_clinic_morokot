@@ -22,20 +22,21 @@ class EcgController extends Controller
 	public function index()
 	{
 		$this->data['rows'] = Ecg::where('ecgs.status', '>=' , 1)
-		->select([
-			'ecgs.*', 
-			'patients.name_en as patient_en', 
-			'patients.name_kh as patient_kh', 
-			'doctors.name_en as doctor_en',
-			'doctors.name_kh as doctor_kh',
-			'ecg_types.name_en as type_en',
-			'ecg_types.name_kh as type_kh'
-		])
-		->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
-		->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id')
-		->leftJoin('ecg_types', 'ecg_types.id', '=', 'ecgs.type')
-		->orderBy('ecgs.id', 'desc')
-		->get();
+			->select([
+				'ecgs.*', 
+				'patients.name_en as patient_en', 
+				'patients.name_kh as patient_kh', 
+				'doctors.name_en as doctor_en',
+				'doctors.name_kh as doctor_kh',
+				'ecg_types.name_en as type_en',
+				'ecg_types.name_kh as type_kh'
+			])
+			->filter()
+			->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
+			->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id')
+			->leftJoin('ecg_types', 'ecg_types.id', '=', 'ecgs.type')
+			->orderBy('ecgs.id', 'desc')
+			->get();
 		return view('ecg.index', $this->data);
 	}
 

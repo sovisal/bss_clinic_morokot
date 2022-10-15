@@ -71,7 +71,12 @@
 
 		</script>
 	</x-slot>
-	<x-card :foot="false"  :head="false">
+	<x-card :foot="false" :action-show="false">
+		<x-slot name="header">
+			<form class="w-100" action="{{ route('para_clinic.echography.index') }}" method="get">
+				<x-report-filter />
+			</form>
+		</x-slot>
 		<x-table class="table-hover table-bordered" id="datatables" data-table="patients">
 			<x-slot name="thead">
 				<tr>

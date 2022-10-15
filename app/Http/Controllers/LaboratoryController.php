@@ -19,12 +19,13 @@ class LaboratoryController extends Controller
 	public function index()
 	{
 		$this->data['rows'] = Laboratory::select([
-			'laboratories.*',
-			'patients.name_en as patient_en',
-			'patients.name_kh as patient_kh',
-			'requester.name_en as requester_en',
-			'requester.name_kh as requester_kh',
-		])
+				'laboratories.*',
+				'patients.name_en as patient_en',
+				'patients.name_kh as patient_kh',
+				'requester.name_en as requester_en',
+				'requester.name_kh as requester_kh',
+			])
+			->filter()
 			->where('laboratories.status', '>=', 1)
 			->leftJoin('patients', 'patients.id', '=', 'laboratories.patient_id')
 			->leftJoin('doctors as requester', 'requester.id', '=', 'laboratories.requested_by')

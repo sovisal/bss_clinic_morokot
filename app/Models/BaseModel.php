@@ -8,6 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class BaseModel extends Model
 {
     use HasFactory;
+
+	public function scopeFilter($query)
+	{
+		$query->when(request()->ft_daterangepicker_drp_start, function ($query, $daterangepicker_drp_start) {
+			$query->where('requested_at', '>=', ($daterangepicker_drp_start .' 00:00:00'));
+		});
+		$query->when(request()->ft_daterangepicker_drp_end, function ($query, $daterangepicker_drp_end) {
+			$query->where('requested_at', '<=', ($daterangepicker_drp_end .' 23:59:59'));
+		});
+		$query->when(request()->ft_patient_id, function ($query, $patient_id) {
+			$query->where('patient_id', '=', $patient_id);
+		});
+	}
 	
 	public function scopeExclude($query, $value = []) 
 	{

@@ -2,7 +2,12 @@
 	<x-slot name="header">
 		<x-form.button href="{{ route('para_clinic.labor.create') }}" label="Create" icon="bx bx-plus"/>
 	</x-slot>
-	<x-card :foot="false"  :head="false">
+	<x-card :foot="false" :action-show="false">
+		<x-slot name="header">
+			<form class="w-100" action="{{ route('para_clinic.labor.index') }}" method="get">
+				<x-report-filter />
+			</form>
+		</x-slot>
 		<x-table class="table-hover table-bordered" id="datatables" data-table="patients">
 			<x-slot name="thead">
 				<tr>

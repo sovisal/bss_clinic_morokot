@@ -137,6 +137,11 @@ body.dark-layout .alert span ul li{
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
 	background: none;
 }
+.select2-container .selection .select2-selection,
+.select2-container .select2-selection__rendered,
+.select2-container .select2-selection__arrow{
+	height: 31px;
+}
 .is-invalid + .select2-container .select2-selection{
   border-color:#ff5b5c !important;
 }

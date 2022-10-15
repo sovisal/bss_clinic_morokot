@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Laboratory extends Model
+class Laboratory extends BaseModel
 {
     use HasFactory;
     protected $guarded = ['id'];
