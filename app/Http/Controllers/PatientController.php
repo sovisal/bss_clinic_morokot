@@ -91,6 +91,10 @@ class PatientController extends Controller
 			]);
 		}
 
+		if ($request->ajax()) {
+			return $patient;
+		}
+
 		if ($request->file('photo')) {
 			$path = public_path('/images/patients/');
 			File::makeDirectory($path, 0777, true, true);

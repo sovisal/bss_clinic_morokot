@@ -12,6 +12,8 @@
 		<!-- Styles: End -->
 		<script>
 			window.route_medicine = "{{ route('setting.medicine.store') }}";
+			window.route_patient = "{{ route('patient.store') }}";
+			window.today = "{{ date('Y-m-d') }}";
 		</script>
 	</head>
 	<body>
