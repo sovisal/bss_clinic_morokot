@@ -118,45 +118,55 @@ class PatientController extends Controller
 				$q->select([
 					'prescriptions.*', 
 					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
 				->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
+				->leftJoin('doctors as requesters', 'requesters.id', '=', 'prescriptions.requested_by')
 				->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id');
 			},
 			'labors' => function($q){
 				$q->select([
 					'laboratories.*', 
 					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
 				->leftJoin('patients', 'patients.id', '=', 'laboratories.patient_id')
+				->leftJoin('doctors as requesters', 'requesters.id', '=', 'laboratories.requested_by')
 				->leftJoin('doctors', 'doctors.id', '=', 'laboratories.doctor_id');
 			},
 			'xrays' => function($q){
 				$q->select([
 					'xrays.*', 
 					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
 				->leftJoin('patients', 'patients.id', '=', 'xrays.patient_id')
+				->leftJoin('doctors as requesters', 'requesters.id', '=', 'xrays.requested_by')
 				->leftJoin('doctors', 'doctors.id', '=', 'xrays.doctor_id');
 			},
 			'echos' => function($q){
 				$q->select([
 					'echographies.*', 
 					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
 				->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
+				->leftJoin('doctors as requesters', 'requesters.id', '=', 'echographies.requested_by')
 				->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id');
 			},
 			'ecgs' => function($q){
 				$q->select([
 					'ecgs.*', 
 					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
 				->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
+				->leftJoin('doctors as requesters', 'requesters.id', '=', 'ecgs.requested_by')
 				->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id');
 			},
 		]);

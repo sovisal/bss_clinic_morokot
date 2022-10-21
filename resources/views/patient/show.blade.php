@@ -126,6 +126,7 @@
 							<th>Patient</th>
 							<th>Requested By</th>
 							<th>Requested Date</th>
+							<th>Analysis By</th>
 							<th>Analysis Date</th>
 							<th>Status</th>
 							<th>Action</th>
@@ -136,8 +137,9 @@
 							<td class="text-center">{{ ++$key }}</td>
 							<td>{{ $row->code }}</td>
 							<td>{{ render_synonyms_name($row->patient_en, $row->patient_kh) }}</td>
-							<td>{{ render_synonyms_name($row->doctor_en, $row->doctor_kh) }}</td>
+							<td>{{ render_synonyms_name($row->requester_en, $row->requester_kh) }}</td>
 							<td class="text-center">{{ render_readable_date($row->requested_at) }}</td>
+							<td>{{ render_synonyms_name($row->doctor_en, $row->doctor_kh) }}</td>
 							<td class="text-center">{{ render_readable_date($row->analysis_at) }}</td>
 							<td class="text-center">{!! render_record_status($row->status) !!}</td>
 							<td class="text-center">
