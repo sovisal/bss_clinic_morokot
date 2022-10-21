@@ -24,6 +24,7 @@ class PrescriptionController extends Controller
 								'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
 								'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 							])
+							->filter()
 							->where('prescriptions.status', '>=', 1)
 							->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
 							->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id')

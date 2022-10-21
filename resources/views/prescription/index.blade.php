@@ -2,15 +2,20 @@
 	<x-slot name="header">
 		<x-form.button href="{{ route('prescription.create') }}" label="Create" icon="bx bx-plus"/>
 	</x-slot>
-	<x-card :foot="false"  :head="false">
+	<x-card :foot="false" :action-show="false">
+		<x-slot name="header">
+			<form class="w-100" action="{{ route('prescription.index') }}" method="get">
+				<x-report-filter />
+			</form>
+		</x-slot>
 		<x-table class="table-hover table-bordered" id="datatables" data-table="patients">
 			<x-slot name="thead">
 				<tr>
 					<th>ID</th>
 					<th>Code</th>
+					<th>Date</th>
 					<th>Patient</th>
 					<th>Physician</th>
-					<th>Date</th>
 					<th>Diagnosis</th>
 					<th>Status</th>
 					<th>Action</th>
@@ -23,9 +28,9 @@
 				<tr>
 					<td class="text-center">{{ ++$i }}</td>
 					<td>{{ $row->code }}</td>
+					<td class="text-center">{{ render_readable_date($row->requested_at) }}</td>
 					<td>{{ render_synonyms_name($row->patient_en, $row->patient_kh) }}</td>
 					<td>{{ render_synonyms_name($row->doctor_en, $row->doctor_kh) }}</td>
-					<td class="text-center">{{ render_readable_date($row->requested_at) }}</td>
 					<td>{{ $row->diagnosis }}</td>
 					<td class="text-center">{!! render_record_status($row->status) !!}</td>
 					<td class="text-right">
