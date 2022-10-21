@@ -30,6 +30,7 @@ class LaboratoryController extends Controller
 			->leftJoin('patients', 'patients.id', '=', 'laboratories.patient_id')
 			->leftJoin('doctors as requester', 'requester.id', '=', 'laboratories.requested_by')
 			->orderBy('laboratories.id', 'desc')
+			->limit(5000)
 			->get();
 		return view('labor.index', $this->data);
 	}

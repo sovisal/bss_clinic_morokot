@@ -113,6 +113,7 @@ class PatientController extends Controller
 	public function show(Patient $patient)
 	{
 		$patient->load([
+			'hasAddress',
 			'prescriptions' => function($q){
 				$q->select([
 					'prescriptions.*', 
@@ -167,7 +168,6 @@ class PatientController extends Controller
 		} else if (!$exist_consultation) {
 			return redirect()->route('patient.consultation.create', ['patient' => $patient->id]);
 		}
-
 		
 		$history = new Collection;
 		$history = $history->concat($patient->prescriptions->map(function($row){
@@ -223,6 +223,7 @@ class PatientController extends Controller
 	 */
 	public function update(PatientRequest $request, Patient $patient)
 	{
+		$address_id = update4LevelAddress($request);
 		$patient->update([
 			'name_kh' => $request->name_kh,
 			'name_en' => $request->name_en,
@@ -245,6 +246,7 @@ class PatientController extends Controller
 			'house_no' => $request->house_no,
 			'street_no' => $request->street_no,
 			'zip_code' => $request->zip_code,
+			'address_id' => $address_id,
 			'registered_at' => $request->registered_at,
 			'updated_by' => auth()->user()->id,
 		]);

@@ -51,23 +51,6 @@
 				<span class="align-middle">History</span>
 			</a>
 		</li>
-
-		<!-- 
-		<li class="nav-item">
-			<a class="nav-link btn-sm" id="prescription-tab" data-toggle="tab" href="#prescription" aria-controls="prescription" role="tab" aria-selected="false">
-				<span class="align-middle">Prescription</span>
-			</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link btn-sm" id="paraclinic-tab" data-toggle="tab" href="#paraclinic" aria-controls="paraclinic" role="tab" aria-selected="false">
-				<span class="align-middle">Paraclinics</span>
-			</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link btn-sm" id="invoice-tab" data-toggle="tab" href="#invoice" aria-controls="invoice" role="tab" aria-selected="false">
-				<span class="align-middle">Invoices</span>
-			</a>
-		</li> -->
 	</ul>
 	<x-card :foot="false" :head="false">
 		<div class="tab-content">
@@ -117,15 +100,15 @@
 					</tr>
 					<tr>
 						<th>Villsage <span class="float-right">:</span></th>
-						<td>{{ $patient->address() ? render_synonyms_name($patient->address()->village_en, $patient->address()->village_kh) : 'N/A' }}</td>
+						<td>{{ $patient->hasAddress ? render_synonyms_name($patient->hasAddress->village_en, $patient->hasAddress->village_kh) : 'N/A' }}</td>
 						<th>Commune <span class="float-right">:</span></th>
-						<td>{{ $patient->address() ? render_synonyms_name($patient->address()->commune_en, $patient->address()->commune_kh) : 'N/A' }}</td>
+						<td>{{ $patient->hasAddress ? render_synonyms_name($patient->hasAddress->commune_en, $patient->hasAddress->commune_kh) : 'N/A' }}</td>
 					</tr>
 					<tr>
 						<th>District <span class="float-right">:</span></th>
-						<td>{{ $patient->address() ? render_synonyms_name($patient->address()->district_en, $patient->address()->district_kh) : 'N/A' }}</td>
+						<td>{{ $patient->hasAddress ? render_synonyms_name($patient->hasAddress->district_en, $patient->hasAddress->district_kh) : 'N/A' }}</td>
 						<th>Province <span class="float-right">:</span></th>
-						<td>{{ $patient->address() ? render_synonyms_name($patient->address()->province_en, $patient->address()->province_kh) : 'N/A' }}</td>
+						<td>{{ $patient->hasAddress ? render_synonyms_name($patient->hasAddress->province_en, $patient->hasAddress->province_kh) : 'N/A' }}</td>
 					</tr>
 					<tr>
 						<th>Zip Code <span class="float-right">:</span></th>
@@ -153,7 +136,7 @@
 							<td class="text-center">{{ ++$key }}</td>
 							<td>{{ $row->code }}</td>
 							<td>{{ render_synonyms_name($row->patient_en, $row->patient_kh) }}</td>
-							<td>{{ render_synonyms_name($row->requester_en, $row->requester_kh) }}</td>
+							<td>{{ render_synonyms_name($row->doctor_en, $row->doctor_kh) }}</td>
 							<td class="text-center">{{ render_readable_date($row->requested_at) }}</td>
 							<td class="text-center">{{ render_readable_date($row->analysis_at) }}</td>
 							<td class="text-center">{!! render_record_status($row->status) !!}</td>
@@ -166,53 +149,6 @@
 					@endforeach
 				</x-table>
 			</div>
-
-			
-			{{-- <div class="tab-pane" id="visit" aria-labelledby="visit-tab" role="tabpanel">
-				
-				<x-table class="mt-1 table-padding-sm">
-					<x-slot name="thead">
-						<th width="150px">Code</th>
-						<th>Physician</th>
-						<th>Patient</th>
-						<th>Date Evaluation</th>
-						<th width="200px">Diagnosis Info</th>
-						<th>Type</th>
-						<th>Status</th>
-						<th>Modify at</th>
-						<th width="8%">Action</th>
-					</x-slot>
-					@foreach ($patient->consultations as $consultation)
-						<tr>
-							<td class="text-center">MED-{{ str_pad($consultation->id, 6, '0', STR_PAD_LEFT) }}</td>
-							<td>{{ $consultation->doctor_name }}</td>
-							<td>{{ $patient->name_kh }}</td>
-							<td>{{ date('', strtotime($consultation->evaluation_date)) }}</td>
-							<td>{{ $consultation->diagnosis }}</td>
-							<td>{{ $consultation->type }}</td>
-							<td class="text-center">
-								<span class="badge badge-{{ (($consultation->status=='complete')? 'success' : 'primary') }}">{{ $consultation->status }}</span>
-							</td>
-							<td>{{ date('d-M-Y H:i', strtotime($consultation->updated_at)) }}</td>
-							<td>
-								<x-form.button icon="bx bx-printer" />
-								@can('UpdatePatient')
-									<x-form.button color="secondary" href="{{ route('patient.consultation.edit', $consultation->id) }}" icon="bx bx-edit-alt" />
-								@endcan
-							</td>
-						</tr>
-					@endforeach
-				</x-table>
-			</div>
-			<div class="tab-pane" id="prescription" aria-labelledby="prescription-tab" role="tabpanel">
-				Prescription
-			</div>
-			<div class="tab-pane" id="paraclinic" aria-labelledby="paraclinic-tab" role="tabpanel">
-				Paraclincs
-			</div>
-			<div class="tab-pane" id="invoice" aria-labelledby="invoice-tab" role="tabpanel">
-				Invoices
-			</div> --}}
 		</div>
 	</x-card>
 

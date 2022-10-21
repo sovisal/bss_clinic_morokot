@@ -29,6 +29,7 @@ class PrescriptionController extends Controller
 							->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
 							->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id')
 							->orderBy('id', 'DESC')
+							->limit(5000)
 							->get();
 		return view('prescription.index', $this->data);
 	}

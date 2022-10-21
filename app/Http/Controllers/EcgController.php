@@ -36,6 +36,7 @@ class EcgController extends Controller
 			->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id')
 			->leftJoin('ecg_types', 'ecg_types.id', '=', 'ecgs.type')
 			->orderBy('ecgs.id', 'desc')
+			->limit(5000)
 			->get();
 		return view('ecg.index', $this->data);
 	}

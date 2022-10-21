@@ -15,6 +15,10 @@ class Patient extends BaseModel
 	{
 		return $this->hasMany(Consultation::class, 'patient_id');
 	}
+	public function hasAddress()
+	{
+		return $this->belongsTo(Address_linkable::class, 'address_id');
+	}
 	public function address()
 	{
 		return $this->belongsTo(Address_linkable::class, 'address_id')->first();
@@ -45,7 +49,7 @@ class Patient extends BaseModel
 		} ));
 		$history = $history->concat($this->ecgs->map(function($row){
 			$row->row_type = 'ecg';
-			$row->route_name = 'para_clinic.ecg';
+			$row->url = route('para_clinic.ecg.print', $row->id);
 			return $row;
 		} ));
 		$history = $history->sortByDesc('requested_at');

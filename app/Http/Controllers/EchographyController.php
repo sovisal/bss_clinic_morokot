@@ -35,6 +35,7 @@ class EchographyController extends Controller
 			->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id')
 			->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
 			->orderBy('echographies.id', 'desc')
+			->limit(5000)
 			->get();
 		return view('echography.index', $this->data);
 	}

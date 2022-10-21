@@ -34,6 +34,7 @@ class XrayController extends Controller
 			->leftJoin('doctors', 'doctors.id', '=', 'xrays.doctor_id')
 			->leftJoin('xray_types', 'xray_types.id', '=', 'xrays.type')
 			->orderBy('xrays.id', 'desc')
+			->limit(5000)
 			->get();
 		return view('xray.index', $this->data);
 	}
