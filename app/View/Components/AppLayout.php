@@ -45,6 +45,26 @@ class AppLayout extends Component
 
 			],
 
+			'invoice' => [
+				'can' => 'ViewAnyPatient',
+				'url' => route('invoice.create'),
+				'label' => '',
+				'sub' => [
+					'invoice' => [
+						'can' => 'ViewAnyPrescription',
+						'url' => route('invoice.index'),
+						'name' => ['index', 'create', 'edit', 'show'],
+						'label' => 'Invoice List',
+					],
+					'invoice_item' => [
+						'can' => 'ViewAnyPrescription',
+						'url' => route('invoice.index'),
+						'name' => ['index', 'create', 'edit', 'show'],
+						'label' => 'Invoice Items',
+					],
+				],
+			],
+
 			'prescription' => [
 				'can' => 'ViewAnyPrescription',
 				'url' => route('prescription.index'),

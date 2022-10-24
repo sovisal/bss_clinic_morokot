@@ -37,3 +37,4 @@ require __DIR__.'/echography-route.php';
 require __DIR__.'/xray-route.php';
 require __DIR__.'/ecg-route.php';
 require __DIR__.'/labor-route.php';
+require __DIR__.'/invoice-route.php';
