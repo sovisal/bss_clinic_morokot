@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\PrescriptionRequest;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
+use DB;
 
 class InvoiceController extends Controller
 {
@@ -39,6 +40,10 @@ class InvoiceController extends Controller
 		$data['medicine'] = Medicine::orderBy('name', 'asc')->get();
 		$data['usages'] = getParentDataSelection('comsumption');
 		$data['time_usage'] = getParentDataSelection('time_usage');
+        $data['gender'] = getParentDataSelection('gender');
+
+        $statement = DB::select("SHOW TABLE STATUS LIKE 'invoices'");
+        $data['inv_number'] = "PT-" . str_pad($statement[0]->Auto_increment + 1, 4, '0', STR_PAD_LEFT);
 		$data['is_edit'] = false;
 		return view('invoice.create', $data);
     }

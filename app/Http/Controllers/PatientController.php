@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use App\Http\Requests\PatientRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Intervention\Image\Facades\Image;
+use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
@@ -301,5 +302,16 @@ class PatientController extends Controller
 	public function getSelect2()
 	{
 		return Patient::getSelect2(['status' => 'active'], ['name_kh', 'asc'], ['id', 'name_kh']);
+	}
+
+	public function getSelectDetail(Request $request)
+	{
+		$patient = Patient::find($request->id);
+
+		$return_result['patient'] = $patient;
+		if ($patient->address_id) {
+			$return_result['address'] = get4LevelAdressSelectorByID($patient->address_id, ...['xx', 'option']);
+		}
+		return response()->json($return_result);
 	}
 }

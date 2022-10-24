@@ -779,13 +779,13 @@ $(document).ready(function () {
                     },
                 }).done(function (result) {
                     // $('[name="pt_no"]').val(result.patient.no);
-                    $('[name="pt_name"]').val(bss_string(result.patient.name));
-                    $('[name="pt_phone"]').val(bss_string(result.patient.phone));
-                    $('[name="pt_age"]').val(bss_string(result.patient.age));
-                    $('[name="pt_age_type"]').val(bss_string(result.patient.age_type));
-                    $('[name="pt_gender"]').val(bss_string(result.patient.pt_gender));
-                    $('[name="pt_village"]').val(bss_string(result.patient.address_village));
-                    $('[name="pt_commune"]').val(bss_string(result.patient.address_commune));
+                    // $('[name="pt_name"]').val(bss_string(result.patient.name));
+                    // $('[name="pt_phone"]').val(bss_string(result.patient.phone));
+                    // $('[name="pt_age"]').val(bss_string(result.patient.age));
+                    // $('[name="pt_age_type"]').val(bss_string(result.patient.age_type));
+                    // $('[name="pt_gender"]').val(bss_string(result.patient.pt_gender));
+                    // $('[name="pt_village"]').val(bss_string(result.patient.address_village));
+                    // $('[name="pt_commune"]').val(bss_string(result.patient.address_commune));
 
                     if (result && result.address) {
                         let _adddressLevel = result.address;

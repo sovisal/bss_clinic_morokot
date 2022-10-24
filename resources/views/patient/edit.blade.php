@@ -201,6 +201,7 @@
 							{!! $_4level_level[3] !!}
 						</x-bss-form.select>
 					</td>
+					<input type="hidden" name="address_id" value="{{ $patient->address_id ?: 0 }}">
 				</tr>
 			</table>
 		</x-card>
