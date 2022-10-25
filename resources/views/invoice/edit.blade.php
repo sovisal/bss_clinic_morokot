@@ -1,24 +1,11 @@
 <x-app-layout>
 	<x-slot name="js">
-		<script>
-			$(document).on('change', '[name="qty[]"], [name="upd[]"], [name="nod[]"]', function () {
-				$this_row = $(this).parents('tr');
-				$total = 	bss_number($this_row.find('[name="qty[]"]').val()) * 
-							bss_number($this_row.find('[name="upd[]"]').val()) * 
-							bss_number($this_row.find('[name="nod[]"]').val());
-
-				$this_row.find('[name="total[]"]').val(bss_number($total));
-			});
-
-			$('.btn-submit').click(function (){
-				$('[name="status"]').val($(this).val());
-			});
-		</script>
+		@include('invoice.script')
 	</x-slot>
 	<x-slot name="header">
-		<x-form.button href="{{ route('prescription.index') }}" color="danger" icon="bx bx-left-arrow-alt" label="Back" />
+		<x-form.button href="{{ route('invoice.index') }}" color="danger" icon="bx bx-left-arrow-alt" label="Back" />
 	</x-slot>
-	<form action="{{ route('prescription.update', $row) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
+	<form action="{{ route('invoice.update', $row) }}" method="POST" autocomplete="off" enctype="multipart/form-data">
 		@method('PUT')
 		@csrf
 		<input type="hidden" name="status" value="{{ $row->status ?: 1 }}"/>
@@ -37,13 +24,13 @@
 			</x-slot>
 			<table class="table-form striped">
 				<tr>
-					<th colspan="4" class="text-left tw-bg-gray-100">Prescription Code #{{ $row->code }}</th>
+					<th colspan="4" class="text-left tw-bg-gray-100">Invoice Code #{{ $row->code }}</th>
 				</tr>
-				@include('prescription.form_input')
+				@include('invoice.form_input')
 			</table>
 			<br>
-			@include('prescription.form_result')
+			@include('invoice.form_result')
 		</x-card>
 	</form>
-
+	@include('invoice.form_sample_item')
 </x-app-layout>

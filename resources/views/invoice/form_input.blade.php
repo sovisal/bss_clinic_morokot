@@ -2,17 +2,17 @@
 	<td width="15%" class="text-right">Invoice Number <small class='required'>*</small></td>
 	<td>
 		<input type="hidden" name="exchange_rate" value="4100">
-		<x-bss-form.input name='inv_number' class="" value="{{ $inv_number }}" required :disabled="$is_edit && $row->inv_number"/>
+		<x-bss-form.input name='inv_number' class="" value="{{ $inv_number }}" required :disabled="true"/>
 	</td>
 	<td class="text-right">Patient name <small class='required'>*</small></td>
 	<td>
-		<x-bss-form.select name="patient_id" required :disabled="$is_edit && $row->patient_id">
+		<x-bss-form.select name="patient_id" required :disabled="$is_edit && $row->pt_id">
 			@if (!$is_edit)
 				<option value="">Please choose patient</option>
 			@endif
 			@foreach ($patient as $data)
 				<option value="{{ $data->id }}" 
-					{{ ($row->patient_id ?? false) == $data->id ? 'selected' : '' }}
+					{{ old('patient_id', @$row->pt_id) == $data->id ? 'selected' : '' }}
 					data-pt_code="PT-{!! str_pad($data->id, 6, '0', STR_PAD_LEFT) !!}"
 					data-gender="{{ $data->gender }}"
 					data-age="{{ $data->age }}"
@@ -28,27 +28,27 @@
 	</td>
 	<td class="text-right">PT Code <small class='required'>*</small></td>
 	<td>
-		<x-bss-form.input name='pt_code' value="" required :disabled="$is_edit && $row->pt_code"/>
+		<x-bss-form.input name='pt_code' value="{{ old('pt_code', @$row->pt_code) }}" required :disabled="$is_edit && $row->pt_code"/>
 	</td>
 </tr>
 <tr>
 	<td class="text-right">Doctor <small class='required'>*</small></td>
 	<td>
-		<x-bss-form.select name="requested_by" required :disabled="$is_edit && $row->requested_by">
+		<x-bss-form.select name="doctor_id" required :disabled="$is_edit && $row->doctor_id">
 			{{-- @if (!$is_edit)
 				<option value="">Please choose</option>
 			@endif --}}
 			@foreach ($doctor as $data)
-				<option value="{{ $data->id }}" {{ ($row->requested_by ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
+				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
 			@endforeach
 		</x-bss-form.select>
 	</td>
 	<td class="text-right">Gender <small class='required'>*</small></td>
 	<td>
-		<x-bss-form.select name="gender" data-no_search="true">
+		<x-bss-form.select name="pt_gender" data-no_search="true" :disabled="$is_edit && $row->pt_gender">
 			<option value="">---- None ----</option>
 			@foreach ($gender as $id => $data)
-				<option value="{{ $id }}" {{ (old('gender')==$id) ? 'selected' : '' }}>{{ $data }}</option>
+				<option value="{{ $id }}" {{ (old('pt_gender', @$row->pt_gender)==$id) ? 'selected' : '' }}>{{ $data }}</option>
 			@endforeach
 		</x-bss-form.select>
 	</td>
@@ -56,16 +56,17 @@
 <tr>
 	<td class="text-right">Remark</td>
 	<td>
-		<x-bss-form.input name='requested_at' class="" hasIcon="right" value="" required :disabled="$is_edit && $row->requested_at"/>
+		<x-bss-form.input name='remark' value="{{ old('remark', @$row->remark) }}"/>
 	</td>
 	<td class="text-right">Age <small class='required'>*</small></td>
 	<td>
-		<x-bss-form.input name='age' value="" required :disabled="$is_edit && $row->age"/>
+		<x-bss-form.input name='pt_age' value="{{ old('pt_age', @$row->pt_age) }}" required :disabled="$is_edit && $row->pt_age"/>
 	</td>
 </tr>
 <?php 
 	$_4level_level = get4LevelAdressSelectorByID(@$row ? $row->address_id : '', ...['xx', 'option']);
 ?>
+<input type="hidden" name="address_id" value="{{ @$row->address_id }}">
 <tr>
 	<td class="text-right">Province</td>
 	<td>

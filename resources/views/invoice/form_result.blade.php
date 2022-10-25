@@ -12,7 +12,7 @@
         <th width="70px">Total</th>
         <th class="text-center">Action</th>
     </tr>
-    @foreach ($prescription_detail as $row)
+    @foreach ([] as $row)
         @php
             static $i = 1;
         @endphp
