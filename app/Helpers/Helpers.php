@@ -351,7 +351,7 @@ function render_payment_status ($st_num = 0) {
 }
 
 
-function generate_code ($prefix, $table_name) {
+function generate_code ($prefix, $table_name, $auto_update = true) {
 
 	#1, Get info from table
 	#2, Check the current code incremet
@@ -361,7 +361,9 @@ function generate_code ($prefix, $table_name) {
 	$obj = unserialize(current($table_info)->TABLE_COMMENT);
 	$obj['code_increment'] = $obj['code_increment'] ?? 0;
 	$code_increment = ++$obj['code_increment'];
-	DB::statement("ALTER TABLE {$table_name} COMMENT = '" . serialize($obj) ."';");
+	if ($auto_update) {
+		DB::statement("ALTER TABLE {$table_name} COMMENT = '" . serialize($obj) ."';");
+	}
 
 	return $prefix . '-' . str_pad($code_increment, 5, "0", STR_PAD_LEFT);
 }

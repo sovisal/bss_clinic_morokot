@@ -2,7 +2,7 @@
 	<td width="15%" class="text-right">Invoice Number <small class='required'>*</small></td>
 	<td>
 		<input type="hidden" name="exchange_rate" value="4100">
-		<x-bss-form.input name='inv_number' class="" value="{{ $inv_number }}" required :disabled="true"/>
+		<x-bss-form.input name='inv_number' class="" value="{{ @$row->code ?: $code }}" required :disabled="true"/>
 	</td>
 	<td class="text-right">Patient name <small class='required'>*</small></td>
 	<td>

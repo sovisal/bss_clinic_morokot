@@ -29,7 +29,7 @@
 				@include('invoice.form_input')
 			</table>
 			<br>
-			@include('invoice.form_input_new')
+			@include('invoice.form_input_detail')
 		</x-card>
 	</form>
 	<div>

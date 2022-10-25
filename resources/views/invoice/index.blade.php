@@ -1,22 +1,25 @@
 <x-app-layout>
 	<x-slot name="header">
-		<x-form.button href="{{ route('prescription.create') }}" label="Create" icon="bx bx-plus"/>
+		<x-form.button href="{{ route('invoice.create') }}" label="Create" icon="bx bx-plus"/>
 	</x-slot>
 	<x-card :foot="false" :action-show="false">
 		<x-slot name="header">
-			<form class="w-100" action="{{ route('prescription.index') }}" method="get">
+			<form class="w-100" action="{{ route('invoice.index') }}" method="get">
 				<x-report-filter />
 			</form>
 		</x-slot>
 		<x-table class="table-hover table-bordered" id="datatables" data-table="patients">
 			<x-slot name="thead">
 				<tr>
-					<th>ID</th>
+					<th>N<sup>o</sup></th>
 					<th>Code</th>
 					<th>Date</th>
+					<th>Doctor</th>
 					<th>Patient</th>
-					<th>Physician</th>
-					<th>Diagnosis</th>
+					<th>Code</th>
+					<th>Gender</th>
+					<th>Age</th>
+					<th>Total</th>
 					<th>Status</th>
 					<th>Action</th>
 				</tr>
@@ -27,19 +30,21 @@
 			@foreach($rows as $row)
 				<tr>
 					<td class="text-center">{{ ++$i }}</td>
-					<td>{{ $row->code }}</td>
-					<td class="text-center">{{ render_readable_date($row->requested_at) }}</td>
-					<td>{{ render_synonyms_name($row->patient_en, $row->patient_kh) }}</td>
+					<td class="text-center">{{ $row->code }}</td>
+					<td class="text-center">{{ render_readable_date($row->inv_date) }}</td>
 					<td>{{ render_synonyms_name($row->doctor_en, $row->doctor_kh) }}</td>
-					<td>{{ $row->diagnosis }}</td>
+					<td>{{ render_synonyms_name($row->patient_en, $row->patient_kh) }}</td>
+					<td>{{ $row->pt_code }}</td>
+					<td class="text-center">{!! getParentDataByType('gender', $row->pt_gender) !!}</td>
+					<td class="text-center">{{ $row->pt_age }}</td>
+					<th class="text-center">{{ $row->total }}</th>
 					<td class="text-center">{!! render_record_status($row->status) !!}</td>
 					<td class="text-right">
-						<x-form.button color="info" class="btn-sm" onclick="getDetail({{ $row->id }}, '{{ route('prescription.getDetail') }}', 'Priscription Detail')" icon="bx bx-detail" />
-						<x-form.button color="dark" class="btn-sm" onclick="printPopup('{{ route('prescription.print', $row->id) }}')" icon="bx bx-printer" />
+						<x-form.button color="dark" class="btn-sm" onclick="printPopup('{{ route('invoice.print', $row->id) }}')" icon="bx bx-printer" />
 						@if ($row->status == 1)
-							<x-form.button color="secondary" class="btn-sm" href="{{ route('prescription.edit', $row->id) }}" icon="bx bx-edit-alt" />
+							<x-form.button color="secondary" class="btn-sm" href="{{ route('invoice.edit', $row->id) }}" icon="bx bx-edit-alt" />
 							<x-form.button color="danger" class="confirmDelete btn-sm" data-id="{{ $row->id }}" icon="bx bx-trash" />
-							<form class="sr-only" id="form-delete-{{ $row->id }}" action="{{ route('prescription.delete', $row->id) }}" method="POST">
+							<form class="sr-only" id="form-delete-{{ $row->id }}" action="{{ route('invoice.delete', $row->id) }}" method="POST">
 								@csrf
 								@method('DELETE')
 								<button class="sr-only" id="btn-{{ $row->id }}">Delete</button>

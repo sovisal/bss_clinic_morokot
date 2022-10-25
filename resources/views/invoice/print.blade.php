@@ -5,62 +5,36 @@
 
 	<section class="print-preview-a4">
 		<header>
-			<x-para-clinic.print-header :row="$row" title="Prescription">
-				<tr>
-					<td width="15%"><b>Diagnosis</b></td>
-					<td colspan="5">: {{ $row->diagnosis }}</td>
-				</tr>
+			<x-para-clinic.print-header :row="$row" title="Invoice">
 			</x-para-clinic.print-header>
 		</header>
 		<section class="prescription-body">
 			<table class="my-2">
 				<tr class="text-center">
-					<th class="text-center">N&deg;</th>
-					<th>Medicine</th>
-					<th width="50px">QTY</th>
-					<th width="50px">U/D</th>
-					<th width="50px">NoD</th>
-					<th width="50px">Total</th>
-					<th width="50px">Unit</th>
-					<th width="160px">Usage Time</th>
-					<th>Usage</th>
-					<th>Note</th>
+					<th class="text-center" style="text-align: center;">N&deg;</th>
+					<th>Service</th>
+					<th>Description</th>
+					<th style="text-align: center;" width="50px">QTY</th>
+					<th style="text-align: center;" width="100px">Price</th>
+					<th style="text-align: center;" width="150px">Total</th>
 				</tr>
 				@foreach ($row->detail as $i => $detail)
 					<tr>
-						<td>{{ str_pad(++$i, 2, '0', STR_PAD_LEFT) }}</td>
-						<td>{{ $detail->medicine_name }}</td>
-						<td>{{ $detail->qty }}</td>
-						<td>{{ $detail->upd }}</td>
-						<td>{{ $detail->nod }}</td>
-						<td>{{ $detail->total }}</td>
-						<td>{{ $detail->unit }}</td>
-						<td>
-							@php
-								$j = 0;
-							@endphp
-							@foreach ($time_usage as $id => $data)
-								@if (in_array($id, explode(',', $detail->usage_times ?? [])))
-									@if ($j==0)
-										{{ $data }}
-										@php
-											$j++
-										@endphp
-									@else
-										- {{ $data }}
-									@endif
-								@endif
-							@endforeach
-						</td>
-						<td>{{ $detail->usage_en }}</td>
-						<td>{{ $detail->other }}</td>
+						<td class="text-center">{{ str_pad(++$i, 2, '0', STR_PAD_LEFT) }}</td>
+						<td>{{ $detail->service_name }}</td>
+						<td>{{ $detail->description }}</td>
+						<td style="text-align: center;">{{ $detail->qty }}</td>
+						<td style="text-align: center;">{{ $detail->price }}</td>
+						<th style="text-align: center;">{{ number_format($detail->total, 2) }} USD</th>
 					</tr>
 				@endforeach
+				<tr>
+					<td colspan="3" class="text-right">Total : </td>
+					<th colspan="3" style="text-align: center;">{{ number_format($row->total, 2) }} USD</th>
+				</tr>
 			</table>
-			<small><b>Qty:</b> Quantity , <b>U/D:</b> Usage per Day , <b>NoD:</b> Number of Day</small>
 		</section>
 		
-		<div class="bring-this-back">(សូមយកវេជ្ជបញ្ជានេះមកជាមួយ ពេលពិនិត្យលើកក្រោយ)</div>
+		<!-- <div class="bring-this-back">(សូមយកវេជ្ជបញ្ជានេះមកជាមួយ ពេលពិនិត្យលើកក្រោយ)</div> -->
 	</section>
-
 </x-print-layout>

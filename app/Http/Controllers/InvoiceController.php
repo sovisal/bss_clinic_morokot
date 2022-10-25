@@ -6,13 +6,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceDetail;
 use App\Models\Patient;
 use App\Models\Medicine;
-use App\Models\DataParent;
-use App\Models\Prescription;
 use App\Models\Doctor;
-use Illuminate\Http\Request;
-use App\Models\PrescriptionDetail;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\PrescriptionRequest;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 use DB;
@@ -26,7 +20,19 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return 'hello';
+        $this->data['rows'] = Invoice::select([
+            'invoices.*',
+            'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+            'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+        ])
+            // ->filter()
+            ->where('invoices.status', '>=', 1)
+            ->leftJoin('patients', 'patients.id', '=', 'invoices.pt_id')
+            ->leftJoin('doctors', 'doctors.id', '=', 'invoices.doctor_id')
+            ->orderBy('id', 'DESC')
+            ->limit(5000)
+            ->get();
+        return view('invoice.index', $this->data);
     }
 
     /**
@@ -37,14 +43,12 @@ class InvoiceController extends Controller
     public function create()
     {
         $data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-		$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
-		$data['medicine'] = Medicine::orderBy('name', 'asc')->get();
+        $data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+        $data['medicine'] = Medicine::orderBy('name', 'asc')->get();
         $data['gender'] = getParentDataSelection('gender');
-
-        $statement = DB::select("SHOW TABLE STATUS LIKE 'invoices'");
-        $data['inv_number'] = "INV-" . str_pad($statement[0]->Auto_increment, 4, '0', STR_PAD_LEFT);
-		$data['is_edit'] = false;
-		return view('invoice.create', $data);
+        $data['code'] = generate_code('INV', 'invoices', false);
+        $data['is_edit'] = false;
+        return view('invoice.create', $data);
     }
 
     /**
@@ -55,23 +59,24 @@ class InvoiceController extends Controller
      */
     public function store(StoreInvoiceRequest $request)
     {
-		if ($inv = Invoice::create([
-			'inv_date' => $request->inv_date ?: date('Y-m-d H:i:s'),
-			'doctor_id' => $request->doctor_id,
-			'remark' => $request->remark ?: '',
-			'pt_id' => $request->patient_id,
-			'pt_code' => $request->pt_code,
-			'pt_gender' => $request->pt_gender,
-			'pt_age' => $request->pt_age,
-			'address_id' => update4LevelAddress($request),
-			'exchange_rate' => $request->exchange_rate ?: 4100,
-			'total' => 0,
-			// 'attribite' => $request->attribite,
-			// 'status' => 1,
-		])) {
-			$this->refresh_invoice_detail($request, $inv->id, true);
+        if ($inv = Invoice::create([
+            'code' => generate_code('INV', 'invoices'),
+            'inv_date' => $request->inv_date ?: date('Y-m-d H:i:s'),
+            'doctor_id' => $request->doctor_id,
+            'remark' => $request->remark ?: '',
+            'pt_id' => $request->patient_id,
+            'pt_code' => $request->pt_code,
+            'pt_gender' => $request->pt_gender,
+            'pt_age' => $request->pt_age,
+            'address_id' => update4LevelAddress($request),
+            'exchange_rate' => $request->exchange_rate ?: 4100,
+            'total' => array_sum($request->total ?: []),
+            // 'attribite' => $request->attribite,
+            'status' => 1,
+        ])) {
+            $this->refresh_invoice_detail($request, $inv->id, true);
             return redirect()->route('invoice.edit', $inv->id)->with('success', 'Data created success');
-		}
+        }
     }
 
     /**
@@ -84,6 +89,30 @@ class InvoiceController extends Controller
     {
         //
     }
+
+    public function print($id)
+	{
+		$invoice = Invoice::select([
+			'invoices.*',
+            'invoices.pt_age as patient_age',
+            'invoices.pt_id as patient_id',
+            'genders.title_en as patient_gender',
+            'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+            'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+		])
+		->where('invoices.id', $id)
+		->with('detail')
+		->leftJoin('patients', 'patients.id', '=', 'invoices.pt_id')
+        ->leftJoin('data_parents AS genders', 'genders.id', '=', 'patients.gender')
+        ->leftJoin('doctors', 'doctors.id', '=', 'invoices.doctor_id')
+		->first();
+		if ($invoice) {
+			$data['row'] = $invoice;
+			return view('invoice.print', $data);
+		}else{
+			abort(404);
+		}
+	}
 
     /**
      * Show the form for editing the specified resource.
@@ -102,8 +131,8 @@ class InvoiceController extends Controller
         $data['gender'] = getParentDataSelection('gender');
         $data['invoice_detail'] = $invoice->detail()->get();
         $data['inv_number'] = "PT-" . str_pad($invoice->id, 4, '0', STR_PAD_LEFT);
-		$data['is_edit'] = true;
-		return view('invoice.edit', $data);
+        $data['is_edit'] = true;
+        return view('invoice.edit', $data);
     }
 
     /**
@@ -115,21 +144,21 @@ class InvoiceController extends Controller
      */
     public function update(UpdateInvoiceRequest $request, Invoice $invoice)
     {
-		if ($invoice->update([
+        if ($invoice->update([
             'inv_date' => $request->inv_date ?: $invoice->inv_date,
-			'doctor_id' => $request->doctor_id ?: $invoice->doctor_id,
-			'remark' => $request->remark ?: $invoice->remark,
-			'pt_id' => $request->patient_id ?: $invoice->pt_id,
-			'pt_code' => $request->pt_code ?: $invoice->pt_code,
-			'pt_gender' => $request->pt_gender ?: $invoice->pt_gender,
-			'pt_age' => $request->pt_age ?: $invoice->pt_age,
-			'address_id' => update4LevelAddress($request),
-			'exchange_rate' => $request->exchange_rate ?: $invoice->exchange_rate,
-			'total' => 0,
+            'doctor_id' => $request->doctor_id ?: $invoice->doctor_id,
+            'remark' => $request->remark ?: $invoice->remark,
+            'pt_id' => $request->patient_id ?: $invoice->pt_id,
+            'pt_code' => $request->pt_code ?: $invoice->pt_code,
+            'pt_gender' => $request->pt_gender ?: $invoice->pt_gender,
+            'pt_age' => $request->pt_age ?: $invoice->pt_age,
+            'address_id' => update4LevelAddress($request),
+            'exchange_rate' => $request->exchange_rate ?: $invoice->exchange_rate,
+            'total' => array_sum($request->total ?: []),
         ])) {
-			$this->refresh_invoice_detail($request, $invoice->id);
-			return redirect()->route('invoice.index')->with('success', 'Data update success');
-		}
+            $this->refresh_invoice_detail($request, $invoice->id);
+            return redirect()->route('invoice.index')->with('success', 'Data update success');
+        }
     }
 
     /**
@@ -140,38 +169,42 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        //
+        $invoice->status = 0;
+		if ($invoice->update()) {
+			return redirect()->route('invoice.index')->with('success', 'Data delete success');
+		}
     }
 
-    public function refresh_invoice_detail($request, $parent_id = 0, $is_new = false) {
+    public function refresh_invoice_detail($request, $parent_id = 0, $is_new = false)
+    {
         $ids = [];
-		foreach ($request->inv_item_id as $index => $id) {
-			$item = [
-                'invoice_id' 	=> $parent_id,
-				'service_type' 	=> $request->service_type[$index] ?: '',
-				'service_name'  => $request->service_name[$index] ?: '',
-				'service_id' 	=> $request->service_id[$index] ?: 0,
-				'qty' 			=> $request->qty[$index] ?: 0,
-				'price' 		=> $request->price[$index] ?: 0,
-				'description'   => $request->description[$index] ?: '',
-				'total' 		=> $request->total[$index] ?: 0,
+        foreach ($request->inv_item_id ?: [] as $index => $id) {
+            $item = [
+                'invoice_id'     => $parent_id,
+                'service_type'     => $request->service_type[$index] ?: '',
+                'service_name'  => $request->service_name[$index] ?: '',
+                'service_id'     => $request->service_id[$index] ?: 0,
+                'qty'             => $request->qty[$index] ?: 0,
+                'price'         => $request->price[$index] ?: 0,
+                'description'   => $request->description[$index] ?: '',
+                'total'         => $request->total[$index] ?: 0,
             ];
-            
+
             if ($id !== '0') {
                 $inv = InvoiceDetail::find($id)->update($item);
                 $ids[] = $id;
             } else {
-				$inv = InvoiceDetail::create($item);
+                $inv = InvoiceDetail::create($item);
                 $ids[] = $inv->id;
             }
-		}
+        }
 
-		if ($is_new == false) {
-			// Clean old data when clicked on icon trast/delete
-			if (sizeof($ids) > 0) {
-				$detailToDelete = InvoiceDetail::where('invoice_id', $parent_id)->whereNotIn('id', $ids);
-				$detailToDelete->delete();
-			}
-		}
-	}
+        if ($is_new == false) {
+            // Clean old data when clicked on icon trast/delete
+            if (sizeof($ids) > 0) {
+                $detailToDelete = InvoiceDetail::where('invoice_id', $parent_id)->whereNotIn('id', $ids);
+                $detailToDelete->delete();
+            }
+        }
+    }
 }
