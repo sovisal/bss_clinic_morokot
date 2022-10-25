@@ -15,6 +15,7 @@ Route::middleware(['auth'])->prefix('patient')->name('patient.')->group(function
 	Route::delete('/{patient}/delete', [PatientController::class, 'destroy'])->name('delete')->middleware('can:DeletePatient');
 	Route::get('/{patient}/show', [PatientController::class, 'show'])->name('show')->middleware('can:ViewAnyPatient');
 	Route::post('/getSelect2', [PatientController::class, 'getSelect2'])->name('getSelect2');
+	Route::post('/getSelectDetail', [PatientController::class, 'getSelectDetail'])->name('getSelectDetail');
 
 	Route::prefix('consultation')->group(function () {
 		Route::get('/', [ConsultationController::class, 'index'])->name('consultation.index')->middleware('can:ViewAnyConsultation');
