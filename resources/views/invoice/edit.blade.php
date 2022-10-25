@@ -29,8 +29,12 @@
 				@include('invoice.form_input')
 			</table>
 			<br>
-			@include('invoice.form_result')
+			@include('invoice.form_input_new')
 		</x-card>
 	</form>
-	@include('invoice.form_sample_item')
+	<div>
+    	<table id="sample_prescription" class="hidden">
+			@include('invoice.form_sample_item')
+		</table>
+	</div>
 </x-app-layout>

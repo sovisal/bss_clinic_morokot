@@ -1,6 +1,9 @@
 <script>
     $(document).ready(function () {
-        $('.table-medicine').append($('#sample_prescription').html());
+        <?php if (!$is_edit) { ?>
+            $('.table-medicine').append($('#sample_prescription').html());
+        <?php } ?>
+            
         $('.table-medicine select').each((_i, e) => {
             $(e).select2({
                 dropdownAutoWidth: !0,

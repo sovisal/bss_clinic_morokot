@@ -1,5 +1,4 @@
-<input type="hidden" name="is_treament_plan" value="0">
-<table class="table-form table-padding-sm table-striped table-medicine">
+<table class="table-form table-padding-sm table-striped table-medicine" id="table_result">
     <thead>
         <tr>
             <th colspan="10" class="tw-bg-gray-100">
@@ -21,6 +20,11 @@
         </tr>
     </thead>
     <tbody>
-        <!-- JS dynamic -->
+        <!-- JS dynamic & preload in Edit screen-->
+        @if(@$invoice_detail)
+            @foreach ($invoice_detail as $item)
+                @include('invoice.form_sample_item')
+            @endforeach
+        @endif
     </tbody>
 </table>
