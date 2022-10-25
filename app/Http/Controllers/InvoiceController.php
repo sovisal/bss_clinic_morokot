@@ -42,7 +42,7 @@ class InvoiceController extends Controller
         $data['gender'] = getParentDataSelection('gender');
 
         $statement = DB::select("SHOW TABLE STATUS LIKE 'invoices'");
-        $data['inv_number'] = "PT-" . str_pad($statement[0]->Auto_increment, 4, '0', STR_PAD_LEFT);
+        $data['inv_number'] = "INV-" . str_pad($statement[0]->Auto_increment, 4, '0', STR_PAD_LEFT);
 		$data['is_edit'] = false;
 		return view('invoice.create', $data);
     }
