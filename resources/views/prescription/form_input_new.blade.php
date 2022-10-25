@@ -4,7 +4,7 @@
         <tr>
             <th colspan="10" class="tw-bg-gray-100">
                 <div class="d-flex justify-content-between align-items-center">
-                    Result
+                    Result <small>Qty: Quantity , U/D: Usage per Day , NoD: Number of Day</small>
                     <div>
                         <x-form.button class="btn-add-medicine" icon="bx bx-plus" label="Add Medicine" />
                     </div>

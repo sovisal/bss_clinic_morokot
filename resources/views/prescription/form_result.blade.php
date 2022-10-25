@@ -1,6 +1,6 @@
 <table class="table-form striped">
 	<tr>
-		<th colspan="4" class="text-left tw-bg-gray-100">Result</th>
+		<th colspan="4" class="text-left tw-bg-gray-100">Result <small>Qty: Quantity , U/D: Usage per Day , NoD: Number of Day</small></th>
 	</tr>
 </table>
 <table class="table-form striped table table-border">
