@@ -155,6 +155,7 @@ class InvoiceController extends Controller
             'address_id' => update4LevelAddress($request),
             'exchange_rate' => $request->exchange_rate ?: $invoice->exchange_rate,
             'total' => array_sum($request->total ?: []),
+            'status' => $request->status ?: 1,
         ])) {
             $this->refresh_invoice_detail($request, $invoice->id);
             return redirect()->route('invoice.index')->with('success', 'Data update success');

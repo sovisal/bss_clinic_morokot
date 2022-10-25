@@ -42,5 +42,9 @@
             $('[name="pt_gender"]').val(current_option.data('gender')).trigger('change');
             $('[name="pt_age"]').val(current_option.data('age'));
         });
+
+        $('.btn-submit').click(function (){
+            $('[name="status"]').val($(this).val());
+        });
     });
 </script>

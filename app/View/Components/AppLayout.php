@@ -56,12 +56,12 @@ class AppLayout extends Component
 						'name' => ['index', 'create', 'edit', 'show'],
 						'label' => 'Invoice List',
 					],
-					'invoice_item' => [
-						'can' => 'ViewAnyPrescription',
-						'url' => route('invoice.index'),
-						'name' => ['index', 'create', 'edit', 'show'],
-						'label' => 'Invoice Items',
-					],
+					// 'invoice_item' => [
+					// 	'can' => 'ViewAnyPrescription',
+					// 	'url' => route('invoice.index'),
+					// 	'name' => ['index', 'create', 'edit', 'show'],
+					// 	'label' => 'Invoice Items',
+					// ],
 				],
 			],
 
