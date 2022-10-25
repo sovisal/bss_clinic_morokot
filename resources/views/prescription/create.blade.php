@@ -98,7 +98,7 @@
 					<x-bss-form.select name="usage_id[]" id="" required data-no_search="true" :select2="false">
 						<option value="">Please choose</option>
 						@foreach ($usages as $id => $data)
-							<option value="{{ $id }}" >{{ $data }}</option>
+							<option value="{{ $id }}" {{ ($data == 'លេប')? 'selected' : '' }} >{{ $data }}</option>
 						@endforeach
 					</x-bss-form.select>
 				</td>
