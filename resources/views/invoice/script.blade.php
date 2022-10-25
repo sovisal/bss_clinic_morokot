@@ -26,11 +26,11 @@
             $this_row.find('[name="total[]"]').val(bss_number($total));
         });
 
-        $(document).on('change', '[name="medicine_id[]"]', function () {
+        $(document).on('change', '[name="service_id[]"]', function () {
             let name = $(this).find(":selected").html();
             let price = bss_number($(this).find(":selected").data('price'));
             $(this).parents('tr').find('[name="price[]"]').val(price).trigger('change');
-            $(this).parents('tr').find('[name="item_name[]"]').val(name);
+            $(this).parents('tr').find('[name="service_name[]"]').val(name);
         });
 
         $(document).on('change', '[name="patient_id"]', function () {
