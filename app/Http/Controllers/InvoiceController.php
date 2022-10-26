@@ -9,7 +9,6 @@ use App\Models\Medicine;
 use App\Models\Doctor;
 use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
-use DB;
 
 class InvoiceController extends Controller
 {
@@ -25,9 +24,9 @@ class InvoiceController extends Controller
             'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
             'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
         ])
-            // ->filter()
+            ->filter()
             ->where('invoices.status', '>=', 1)
-            ->leftJoin('patients', 'patients.id', '=', 'invoices.pt_id')
+            ->leftJoin('patients', 'patients.id', '=', 'invoices.patient_id')
             ->leftJoin('doctors', 'doctors.id', '=', 'invoices.doctor_id')
             ->orderBy('id', 'DESC')
             ->limit(5000)
@@ -64,14 +63,14 @@ class InvoiceController extends Controller
             'inv_date' => $request->inv_date ?: date('Y-m-d H:i:s'),
             'doctor_id' => $request->doctor_id,
             'remark' => $request->remark ?: '',
-            'pt_id' => $request->patient_id,
+            'patient_id' => $request->patient_id,
             'pt_code' => $request->pt_code,
             'pt_gender' => $request->pt_gender,
             'pt_age' => $request->pt_age,
             'address_id' => update4LevelAddress($request),
             'exchange_rate' => $request->exchange_rate ?: 4100,
             'total' => array_sum($request->total ?: []),
-            // 'attribite' => $request->attribite,
+			'requested_at' => $request->requested_at ?: date('Y-m-d H:i:s'),
             'status' => 1,
         ])) {
             $this->refresh_invoice_detail($request, $inv->id, true);
@@ -95,14 +94,13 @@ class InvoiceController extends Controller
 		$invoice = Invoice::select([
 			'invoices.*',
             'invoices.pt_age as patient_age',
-            'invoices.pt_id as patient_id',
             'genders.title_en as patient_gender',
             'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
             'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 		])
 		->where('invoices.id', $id)
 		->with('detail')
-		->leftJoin('patients', 'patients.id', '=', 'invoices.pt_id')
+		->leftJoin('patients', 'patients.id', '=', 'invoices.patient_id')
         ->leftJoin('data_parents AS genders', 'genders.id', '=', 'patients.gender')
         ->leftJoin('doctors', 'doctors.id', '=', 'invoices.doctor_id')
 		->first();
@@ -148,7 +146,7 @@ class InvoiceController extends Controller
             'inv_date' => $request->inv_date ?: $invoice->inv_date,
             'doctor_id' => $request->doctor_id ?: $invoice->doctor_id,
             'remark' => $request->remark ?: $invoice->remark,
-            'pt_id' => $request->patient_id ?: $invoice->pt_id,
+            'patient_id' => $request->patient_id ?: $invoice->patient_id,
             'pt_code' => $request->pt_code ?: $invoice->pt_code,
             'pt_gender' => $request->pt_gender ?: $invoice->pt_gender,
             'pt_age' => $request->pt_age ?: $invoice->pt_age,

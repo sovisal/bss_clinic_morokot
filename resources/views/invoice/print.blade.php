@@ -29,8 +29,16 @@
 					</tr>
 				@endforeach
 				<tr>
-					<td colspan="3" class="text-right">Total : </td>
-					<th colspan="3" style="text-align: center;">{{ number_format($row->total, 2) }} USD</th>
+					<td colspan="3" class="text-right">Total USD: </td>
+					<th colspan="3" style="text-align: right;">USD {{ number_format($row->total, 2) }}</th>
+				</tr>
+				<tr>
+					<td colspan="3" class="text-right">Echange Rate : </td>
+					<th colspan="3" style="text-align: right;">KHR/USD {{ number_format($row->exchange_rate, 0) }}</th>
+				</tr>
+				<tr>
+					<td colspan="3" class="text-right">Total KHR : </td>
+					<th colspan="3" style="text-align: right;">KHR {{ number_format($row->total * $row->exchange_rate, 0) }}</th>
 				</tr>
 			</table>
 		</section>

@@ -19,7 +19,9 @@
 					<th>Code</th>
 					<th>Gender</th>
 					<th>Age</th>
-					<th>Total</th>
+					<th>Total USD</th>
+					<th>Exchange Rate</th>
+					<th>Total KHR</th>
 					<th>Status</th>
 					<th>Action</th>
 				</tr>
@@ -37,7 +39,9 @@
 					<td>{{ $row->pt_code }}</td>
 					<td class="text-center">{!! getParentDataByType('gender', $row->pt_gender) !!}</td>
 					<td class="text-center">{{ $row->pt_age }}</td>
-					<th class="text-center">{{ $row->total }}</th>
+					<th class="text-center">{{ number_format($row->total, 2) }}</th>
+					<th class="text-center">{{ number_format($row->exchange_rate, 0) }}</th>
+					<th class="text-center">{{ number_format($row->total * $row->exchange_rate, 0) }}</th>
 					<td class="text-center">{!! render_record_status($row->status) !!}</td>
 					<td class="text-right">
 						<x-form.button color="dark" class="btn-sm" onclick="printPopup('{{ route('invoice.print', $row->id) }}')" icon="bx bx-printer" />

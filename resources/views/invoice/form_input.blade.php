@@ -1,18 +1,27 @@
 <tr>
 	<td width="15%" class="text-right">Invoice Number <small class='required'>*</small></td>
 	<td>
-		<input type="hidden" name="exchange_rate" value="4100">
-		<x-bss-form.input name='inv_number' class="" value="{{ @$row->code ?: $code }}" required :disabled="true"/>
+		<table width="100%">
+			<tr>
+				<td>
+					<x-bss-form.input name='inv_number' class="" value="{{ @$row->code ?: $code }}" required :disabled="true"/>
+				</td>
+				<td class="text-right">Exchange Rate <small class='required'>*</small></td>
+				<td>
+					<x-bss-form.input name='exchange_rate' class="" value="{{ @$row->exchange_rate ?: 4100 }}" required :disabled="$is_edit && $row->status > 1"/>
+				</td>
+			</tr>
+		</table>
 	</td>
 	<td class="text-right">Patient name <small class='required'>*</small></td>
 	<td>
-		<x-bss-form.select name="patient_id" required :disabled="$is_edit && $row->pt_id">
+		<x-bss-form.select name="patient_id" required :disabled="$is_edit && $row->patient_id">
 			@if (!$is_edit)
 				<option value="">Please choose patient</option>
 			@endif
 			@foreach ($patient as $data)
 				<option value="{{ $data->id }}" 
-					{{ old('patient_id', @$row->pt_id) == $data->id ? 'selected' : '' }}
+					{{ old('patient_id', @$row->patient_id) == $data->id ? 'selected' : '' }}
 					data-pt_code="PT-{!! str_pad($data->id, 6, '0', STR_PAD_LEFT) !!}"
 					data-gender="{{ $data->gender }}"
 					data-age="{{ $data->age }}"
