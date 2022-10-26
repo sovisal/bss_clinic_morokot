@@ -14,7 +14,6 @@ class AddTotalToInvoices extends Migration
     public function up()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->float('total')->default('0');
             $table->string('code', 50)->default('');
             $table->integer('status')->default('0');
         });
@@ -28,7 +27,6 @@ class AddTotalToInvoices extends Migration
     public function down()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->dropColumn('total');
             $table->dropColumn('code');
             $table->dropColumn('status');
         });
