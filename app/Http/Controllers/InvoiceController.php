@@ -42,7 +42,7 @@ class InvoiceController extends Controller
     public function create()
     {
         $data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-        $data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+        $data['doctor'] = Doctor::orderBy('id', 'asc')->get();
         $data['medicine'] = Medicine::orderBy('name', 'asc')->get();
         $data['gender'] = getParentDataSelection('gender');
         $data['code'] = generate_code('INV', 'invoices', false);
@@ -70,7 +70,7 @@ class InvoiceController extends Controller
             'address_id' => update4LevelAddress($request),
             'exchange_rate' => $request->exchange_rate ?: 4100,
             'total' => array_sum($request->total ?: []),
-			'requested_at' => $request->requested_at ?: date('Y-m-d H:i:s'),
+            'requested_at' => $request->requested_at ?: date('Y-m-d H:i:s'),
             'status' => 1,
         ])) {
             $this->refresh_invoice_detail($request, $inv->id, true);
@@ -90,27 +90,27 @@ class InvoiceController extends Controller
     }
 
     public function print($id)
-	{
-		$invoice = Invoice::select([
-			'invoices.*',
+    {
+        $invoice = Invoice::select([
+            'invoices.*',
             'invoices.pt_age as patient_age',
             'genders.title_en as patient_gender',
             'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
             'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
-		])
-		->where('invoices.id', $id)
-		->with('detail')
-		->leftJoin('patients', 'patients.id', '=', 'invoices.patient_id')
-        ->leftJoin('data_parents AS genders', 'genders.id', '=', 'patients.gender')
-        ->leftJoin('doctors', 'doctors.id', '=', 'invoices.doctor_id')
-		->first();
-		if ($invoice) {
-			$data['row'] = $invoice;
-			return view('invoice.print', $data);
-		}else{
-			abort(404);
-		}
-	}
+        ])
+            ->where('invoices.id', $id)
+            ->with('detail')
+            ->leftJoin('patients', 'patients.id', '=', 'invoices.patient_id')
+            ->leftJoin('data_parents AS genders', 'genders.id', '=', 'patients.gender')
+            ->leftJoin('doctors', 'doctors.id', '=', 'invoices.doctor_id')
+            ->first();
+        if ($invoice) {
+            $data['row'] = $invoice;
+            return view('invoice.print', $data);
+        } else {
+            abort(404);
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -124,7 +124,7 @@ class InvoiceController extends Controller
 
         $data['row'] = $invoice;
         $data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-        $data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+        $data['doctor'] = Doctor::orderBy('id', 'asc')->get();
         $data['medicine'] = Medicine::orderBy('name', 'asc')->get();
         $data['gender'] = getParentDataSelection('gender');
         $data['invoice_detail'] = $invoice->detail()->get();
@@ -169,9 +169,9 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         $invoice->status = 0;
-		if ($invoice->update()) {
-			return redirect()->route('invoice.index')->with('success', 'Data delete success');
-		}
+        if ($invoice->update()) {
+            return redirect()->route('invoice.index')->with('success', 'Data delete success');
+        }
     }
 
     public function refresh_invoice_detail($request, $parent_id = 0, $is_new = false)

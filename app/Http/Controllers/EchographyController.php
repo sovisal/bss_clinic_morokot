@@ -21,16 +21,16 @@ class EchographyController extends Controller
 	public function index()
 	{
 		$this->data['rows'] = Echography::select([
-				'echographies.*', 
-				'patients.name_en as patient_en', 
-				'patients.name_kh as patient_kh', 
-				'doctors.name_en as doctor_en',
-				'doctors.name_kh as doctor_kh',
-				'echo_types.name_en as type_en',
-				'echo_types.name_kh as type_kh'
-			])
+			'echographies.*',
+			'patients.name_en as patient_en',
+			'patients.name_kh as patient_kh',
+			'doctors.name_en as doctor_en',
+			'doctors.name_kh as doctor_kh',
+			'echo_types.name_en as type_en',
+			'echo_types.name_kh as type_kh'
+		])
 			->filter()
-			->where('echographies.status', '>=' , 1) //1-Draft, 2-Completed, Helper function render_record_status()
+			->where('echographies.status', '>=', 1) //1-Draft, 2-Completed, Helper function render_record_status()
 			->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
 			->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id')
 			->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
@@ -49,7 +49,7 @@ class EchographyController extends Controller
 	{
 		$data['type'] = EchoType::where('status', 1)->orderBy('index', 'asc')->get();
 		$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-		$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+		$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		$data['payment_type'] = getParentDataSelection('payment_type');
 		$data['is_edit'] = false;
 		return view('echography.create', $data);
@@ -62,15 +62,15 @@ class EchographyController extends Controller
 	{
 		$echography = new Echography();
 		if ($request->type) {
-            $echo_type = EchoType::where('id', $request->type)->first();
-        }
+			$echo_type = EchoType::where('id', $request->type)->first();
+		}
 
 		if ($request->file('img_1')) {
-			$img_1_name = time() .'_image_1_'. rand(111,999) .'.png';
+			$img_1_name = time() . '_image_1_' . rand(111, 999) . '.png';
 			$request['image_1'] = $img_1_name;
 		}
 		if ($request->file('img_2')) {
-			$img_2_name = time() .'_image_2_'. rand(111,999) .'.png';
+			$img_2_name = time() . '_image_2_' . rand(111, 999) . '.png';
 			$request['image_2'] = $img_2_name;
 		}
 
@@ -85,8 +85,8 @@ class EchographyController extends Controller
 			'requested_at' => $request->requested_at,
 			'image_1' => $request->image_1,
 			'image_2' => $request->image_2,
-            'amount' => $request->amount ?: ($echo_type ? $echo_type->price : 0),
-            'attribute' => $echo_type ? $echo_type->attribite : null,
+			'amount' => $request->amount ?: ($echo_type ? $echo_type->price : 0),
+			'attribute' => $echo_type ? $echo_type->attribite : null,
 			'status' => 1,
 			'age' => $request->age ?: 0,
 		])) {
@@ -103,8 +103,8 @@ class EchographyController extends Controller
 			}
 
 			if ($request->is_treament_plan) {
-                return redirect()->route('patient.consultation.edit', $request->consultation_id)->with('success', 'Data created success');
-            } else {
+				return redirect()->route('patient.consultation.edit', $request->consultation_id)->with('success', 'Data created success');
+			} else {
 				return redirect()->route('para_clinic.echography.edit', $echo->id)->with('success', 'Data created success');
 			}
 		}
@@ -116,33 +116,33 @@ class EchographyController extends Controller
 	public function getDetail(Request $request)
 	{
 		$row = Echography::where('echographies.id', $request->id)
-		->select([
-			'echographies.*',
-			'patients.name_en as patient_en',
-			'patients.name_kh as patient_kh',
-			'physicians.name_en as physician_en',
-			'physicians.name_kh as physician_kh',
-			'requestedBy.name_en as requested_en',
-			'requestedBy.name_kh as requested_kh',
-			'paymentTypes.title_en as payment_type_en',
-			'paymentTypes.title_kh as payment_type_kh',
-			'echo_types.name_en as type_en',
-			'echo_types.name_kh as type_kh'
-		])
-		->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
-		->leftJoin('data_parents AS paymentTypes', 'paymentTypes.id', '=', 'echographies.payment_type')
-		->leftJoin('doctors AS physicians', 'physicians.id', '=', 'echographies.doctor_id')
-		->leftJoin('doctors AS requestedBy', 'requestedBy.id', '=', 'echographies.requested_by')
-		->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
-		->first();
+			->select([
+				'echographies.*',
+				'patients.name_en as patient_en',
+				'patients.name_kh as patient_kh',
+				'physicians.name_en as physician_en',
+				'physicians.name_kh as physician_kh',
+				'requestedBy.name_en as requested_en',
+				'requestedBy.name_kh as requested_kh',
+				'paymentTypes.title_en as payment_type_en',
+				'paymentTypes.title_kh as payment_type_kh',
+				'echo_types.name_en as type_en',
+				'echo_types.name_kh as type_kh'
+			])
+			->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
+			->leftJoin('data_parents AS paymentTypes', 'paymentTypes.id', '=', 'echographies.payment_type')
+			->leftJoin('doctors AS physicians', 'physicians.id', '=', 'echographies.doctor_id')
+			->leftJoin('doctors AS requestedBy', 'requestedBy.id', '=', 'echographies.requested_by')
+			->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
+			->first();
 		if ($row) {
 			$body = '';
 			$tbody = '';
 			$attributes = array_except(filter_unit_attr(unserialize($row->attribute) ?: []), ['status', 'amount', 'payment_type']);
 			foreach ($attributes as $label => $attr) {
 				$tbody .= '<tr>
-								<td width="30%" class="text-right tw-bg-gray-100">'. __('form.echography.'. $label) .'</td>
-								<td>'. $attr .'</td>
+								<td width="30%" class="text-right tw-bg-gray-100">' . __('form.echography.' . $label) . '</td>
+								<td>' . $attr . '</td>
 							</tr>';
 			}
 			$body = '<table class="table-form tw-mt-3 table-detail-result">
@@ -151,7 +151,7 @@ class EchographyController extends Controller
 								<th colspan="4" class="text-left tw-bg-gray-100">Result</th>
 							</tr>
 						</thead>
-						<tbody>'. ((empty($attributes))? '<tr><th colspan="4" class="text-center">No result</th></tr>' : $tbody) .'</tbody>
+						<tbody>' . ((empty($attributes)) ? '<tr><th colspan="4" class="text-center">No result</th></tr>' : $tbody) . '</tbody>
 					</table>';
 			return response()->json([
 				'success' => true,
@@ -159,7 +159,7 @@ class EchographyController extends Controller
 				'body' => $body,
 				'print_url' => route('para_clinic.echography.print', $row->id),
 			]);
-		}else{
+		} else {
 			return response()->json([
 				'success' => false,
 				'message' => 'Echography not found!',
@@ -180,11 +180,11 @@ class EchographyController extends Controller
 			'doctors.name_kh as doctor_kh',
 			'echo_types.name_kh as type_kh'
 		])
-		->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
-		->leftJoin('data_parents', 'data_parents.id', '=', 'patients.gender')
-		->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id')
-		->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
-		->find($id);
+			->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
+			->leftJoin('data_parents', 'data_parents.id', '=', 'patients.gender')
+			->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id')
+			->leftJoin('echo_types', 'echo_types.id', '=', 'echographies.type')
+			->find($id);
 		$echography->attribute = array_except(filter_unit_attr(unserialize($echography->attribute) ?: []), ['status', 'amount']);
 		$data['echography'] = $echography;
 		return view('echography.print', $data);
@@ -200,8 +200,8 @@ class EchographyController extends Controller
 			$data['row'] = $echography;
 			$data['type'] = EchoType::where('status', 1)->orderBy('index', 'asc')->get();
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
-		} 
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
+		}
 		$data['payment_type'] = getParentDataSelection('payment_type');
 		$data['is_edit'] = true;
 		return view('echography.edit', $data);
@@ -214,8 +214,8 @@ class EchographyController extends Controller
 			$data['row'] = $echography;
 			$data['type'] = EchoType::where('status', 1)->orderBy('index', 'asc')->get();
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
-		} 
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
+		}
 		$data['payment_type'] = getParentDataSelection('payment_type');
 		$data['is_edit'] = true;
 		return view('echography.show', $data);
@@ -231,18 +231,18 @@ class EchographyController extends Controller
 		$request['attribute'] = serialize($serialize);
 		$request['amount'] = $request->amount ?? 0;
 		$request['doctor_id'] = $request->doctor_id ?? 0;
-		
+
 		$path = public_path('/images/echographies/');
 		File::makeDirectory($path, 0777, true, true);
 		if ($request->file('img_1')) {
 			$img_1 = $request->file('img_1');
-			$img_1_name = (($echography->image_1!='')? $echography->image_1 : time() .'_image_1_'. $echography->id .'.png');
+			$img_1_name = (($echography->image_1 != '') ? $echography->image_1 : time() . '_image_1_' . $echography->id . '.png');
 			Image::make($img_1->getRealPath())->save($path . $img_1_name);
 			$request['image_1'] = $img_1_name;
 		}
 		if ($request->file('img_2')) {
 			$img_2 = $request->file('img_2');
-			$img_2_name = (($echography->image_2!='')? $echography->image_2 : time() .'_image_2_'. $echography->id .'.png');
+			$img_2_name = (($echography->image_2 != '') ? $echography->image_2 : time() . '_image_2_' . $echography->id . '.png');
 			Image::make($img_2->getRealPath())->save($path . $img_2_name);
 			$request['image_2'] = $img_2_name;
 		}

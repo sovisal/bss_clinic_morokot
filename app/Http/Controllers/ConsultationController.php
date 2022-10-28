@@ -21,7 +21,7 @@ class ConsultationController extends Controller
 	public function index()
 	{
 		$data = [
-			'consultations' => [0,1,2,3,4,5,6,7,8,9]
+			'consultations' => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 		];
 		return view('consultation.index', $data);
 	}
@@ -34,7 +34,7 @@ class ConsultationController extends Controller
 		$patient = Patient::find(request()->patient) ?? null;
 		if ($patient) {
 			session(['consultation_cancel_route' => 'patient.index']);
-		}else{
+		} else {
 			session(['consultation_cancel_route' => 'patient.consultation.index']);
 		}
 		$data = [
@@ -76,13 +76,13 @@ class ConsultationController extends Controller
 	{
 		$data = [
 			'consultation' => append_array_to_obj($consultation, unserialize($consultation->attribute) ?: []),
-			'doctors' => Doctor::orderBy('name_en', 'asc')->get(),
+			'doctors' => Doctor::orderBy('id', 'asc')->get(),
 			'payment_types' => getParentDataSelection('payment_type'),
 			'evaluation_categories' => getParentDataSelection('evalutaion_category'),
 		];
 
 		// For Indication tab
-		$data['indication_diseases'] = $data['consultation']->evaluation_category ? 
+		$data['indication_diseases'] = $data['consultation']->evaluation_category ?
 			getParentDataSelection('indication_disease', ['status' => 1, 'parent_id' => $data['consultation']->evaluation_category]) :
 			getParentDataSelection('indication_disease');
 
@@ -122,16 +122,16 @@ class ConsultationController extends Controller
 	public function getTemplate(Request $request)
 	{
 		$analysed_by = '<option value="">Please choose</option>';
-		$doctors = Doctor::orderBy('name_en', 'asc')->get();
+		$doctors = Doctor::orderBy('id', 'asc')->get();
 		foreach ($doctors as $doctor) {
-			$analysed_by .= '<option value="'. $doctor->id .'">'. $doctor->name_en .'</option>';
+			$analysed_by .= '<option value="' . $doctor->id . '">' . $doctor->name_en . '</option>';
 		}
 
 		$template = '<option value="">Please choose</option>';
 		if ($request->type == 'echography') {
 			$types = EchoType::where('status', 1)->orderBy('index', 'asc')->get();
 			foreach ($types as $type) {
-				$template .= '<option value="'. $type->id .'">'. $type->name_en .'</option>';
+				$template .= '<option value="' . $type->id . '">' . $type->name_en . '</option>';
 			}
 		}
 
@@ -163,31 +163,30 @@ class ConsultationController extends Controller
 		$data['list_ecg'] 			= $patient->ecgs() 			? $patient->ecgs()->where('status', '>=', 1)->select('id', 'code')->get()->toArray() : [];
 
 		$label = array_map(function ($val) {
-			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\''. $val['id'] .'\',\'' . route('prescription.getDetail') . '\', \'Prescription Detail\')">' . ($val['code'] ?: 'N/A') . '</a>';
+			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\'' . $val['id'] . '\',\'' . route('prescription.getDetail') . '\', \'Prescription Detail\')">' . ($val['code'] ?: 'N/A') . '</a>';
 		}, $data['list_prescription']);
 		$data['list_prescription'] = implode(',  ', $label);
 
 		$label = array_map(function ($val) {
-			return '<a class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\''. $val['id'] .'\',\'' . route('para_clinic.labor.getDetail') . '\', \'Test Detail\')">' . ($val['code'] ?: 'N/A') . '</a>';
+			return '<a class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\'' . $val['id'] . '\',\'' . route('para_clinic.labor.getDetail') . '\', \'Test Detail\')">' . ($val['code'] ?: 'N/A') . '</a>';
 		}, $data['list_labor']);
 		$data['list_labor'] = implode(',  ', $label);
 
 		$label = array_map(function ($val) {
-			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\''. $val['id'] .'\',\'' . route('para_clinic.xray.getDetail') . '\', \'X-Ray Detail\')">' . ($val['code'] ?: 'N/A') . '</a>';
+			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\'' . $val['id'] . '\',\'' . route('para_clinic.xray.getDetail') . '\', \'X-Ray Detail\')">' . ($val['code'] ?: 'N/A') . '</a>';
 		}, $data['list_xray']);
-        $data['list_xray'] = implode(',  ', $label);
+		$data['list_xray'] = implode(',  ', $label);
 
 		$label = array_map(function ($val) {
-			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\''. $val['id'] .'\',\'' . route('para_clinic.echography.getDetail') . '\', \'Echography Detail\')">' . ($val['code'] ?: 'N/A') . '</span>';
+			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\'' . $val['id'] . '\',\'' . route('para_clinic.echography.getDetail') . '\', \'Echography Detail\')">' . ($val['code'] ?: 'N/A') . '</span>';
 		}, $data['list_echo']);
 		$data['list_echo'] = implode(',  ', $label);
 
 		$label = array_map(function ($val) {
-			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\''. $val['id'] .'\',\'' . route('para_clinic.ecg.getDetail') . '\', \'ECG Detail\')">' . ($val['code'] ?: 'N/A') . '</span>';
+			return '<span class="text-primary cursor-pointer hover:tw-text-blue-700 tw-duration-500" onclick="getDetail(\'' . $val['id'] . '\',\'' . route('para_clinic.ecg.getDetail') . '\', \'ECG Detail\')">' . ($val['code'] ?: 'N/A') . '</span>';
 		}, $data['list_ecg']);
-        $data['list_ecg'] = implode(',  ', $label);
+		$data['list_ecg'] = implode(',  ', $label);
 
 		return json_encode($data);
 	}
-
 }

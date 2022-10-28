@@ -19,12 +19,12 @@ class LaboratoryController extends Controller
 	public function index()
 	{
 		$this->data['rows'] = Laboratory::select([
-				'laboratories.*',
-				'patients.name_en as patient_en',
-				'patients.name_kh as patient_kh',
-				'requester.name_en as requester_en',
-				'requester.name_kh as requester_kh',
-			])
+			'laboratories.*',
+			'patients.name_en as patient_en',
+			'patients.name_kh as patient_kh',
+			'requester.name_en as requester_en',
+			'requester.name_kh as requester_kh',
+		])
 			->filter()
 			->where('laboratories.status', '>=', 1)
 			->leftJoin('patients', 'patients.id', '=', 'laboratories.patient_id')
@@ -41,7 +41,7 @@ class LaboratoryController extends Controller
 	public function create()
 	{
 		$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-		$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+		$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		$data['payment_type'] = getParentDataSelection('payment_type');
 		$data['gender'] = getParentDataSelection('gender');
 		$data['labor_type'] = LaborType::where('status', 1)->orderBy('index', 'asc')->regroupe();
@@ -104,7 +104,7 @@ class LaboratoryController extends Controller
 		if ($labor ?? false) {
 			$data['row'] = $labor;
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		}
 		$data['gender'] = getParentDataSelection('gender');
 		$data['payment_type'] = getParentDataSelection('payment_type');
@@ -315,7 +315,7 @@ class LaboratoryController extends Controller
 		if ($labor ?? false) {
 			$data['row'] = $labor;
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		}
 		$data['gender'] = getParentDataSelection('gender');
 		$data['payment_type'] = getParentDataSelection('payment_type');

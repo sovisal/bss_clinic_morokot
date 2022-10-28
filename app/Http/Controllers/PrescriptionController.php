@@ -20,17 +20,17 @@ class PrescriptionController extends Controller
 	public function index()
 	{
 		$this->data['rows'] = Prescription::select([
-								'prescriptions.*', 
-								'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
-								'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
-							])
-							->filter()
-							->where('prescriptions.status', '>=', 1)
-							->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
-							->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id')
-							->orderBy('id', 'DESC')
-							->limit(5000)
-							->get();
+			'prescriptions.*',
+			'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+			'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+		])
+			->filter()
+			->where('prescriptions.status', '>=', 1)
+			->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
+			->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id')
+			->orderBy('id', 'DESC')
+			->limit(5000)
+			->get();
 		return view('prescription.index', $this->data);
 	}
 
@@ -40,7 +40,7 @@ class PrescriptionController extends Controller
 	public function create()
 	{
 		$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-		$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+		$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		$data['medicine'] = Medicine::orderBy('name', 'asc')->get();
 		$data['usages'] = getParentDataSelection('comsumption');
 		$data['time_usage'] = getParentDataSelection('time_usage');
@@ -86,48 +86,48 @@ class PrescriptionController extends Controller
 			'physicians.name_en as physician_en',
 			'physicians.name_kh as physician_kh',
 		])
-		->where('prescriptions.id', $request->id)
-		->with([
-			'detail' => function($q){
-				$q->select([
-					'prescription_details.*',
-					'medicines.name as medicine_name',
-					'data_parents.title_en as usage_en',
-				])
-				->leftJoin('medicines', 'medicines.id', '=', 'prescription_details.medicine_id')
-				->leftJoin('data_parents', 'data_parents.id', '=', 'prescription_details.usage_id');
-			}
-		])
-		->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
-		->leftJoin('doctors AS physicians', 'physicians.id', '=', 'prescriptions.doctor_id')
-		->first();
+			->where('prescriptions.id', $request->id)
+			->with([
+				'detail' => function ($q) {
+					$q->select([
+						'prescription_details.*',
+						'medicines.name as medicine_name',
+						'data_parents.title_en as usage_en',
+					])
+						->leftJoin('medicines', 'medicines.id', '=', 'prescription_details.medicine_id')
+						->leftJoin('data_parents', 'data_parents.id', '=', 'prescription_details.usage_id');
+				}
+			])
+			->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
+			->leftJoin('doctors AS physicians', 'physicians.id', '=', 'prescriptions.doctor_id')
+			->first();
 
 		if ($row) {
-			$status_html = (($row->status==2)? '<span class="badge badge-primary">Completed</span>' : '<span class="badge badge-light">Incompleted</span>');
-			$status_html .= (($row->payment_status==2)? '<span class="badge badge-success tw-ml-1">Paid</span>' : '<span class="badge badge-light tw-ml-1">Unpaid</span>');
+			$status_html = (($row->status == 2) ? '<span class="badge badge-primary">Completed</span>' : '<span class="badge badge-light">Incompleted</span>');
+			$status_html .= (($row->payment_status == 2) ? '<span class="badge badge-success tw-ml-1">Paid</span>' : '<span class="badge badge-light tw-ml-1">Unpaid</span>');
 			$header =  '
 				<table class="table-form table-header-info">
 					<thead>
 						<tr>
-							<th colspan="4" class="text-left tw-bg-gray-100">Patient <span class="tw-pl-2 detail-status">'. $status_html .'</span></th>
+							<th colspan="4" class="text-left tw-bg-gray-100">Patient <span class="tw-pl-2 detail-status">' . $status_html . '</span></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td class="text-right tw-bg-gray-100">Name</td>
-							<td>'. render_synonyms_name($row->patient_en, $row->patient_kh) .'</td>
+							<td>' . render_synonyms_name($row->patient_en, $row->patient_kh) . '</td>
 							<td width="20%" class="text-right tw-bg-gray-100">Code</td>
-							<td>No.'. $row->code .'</td>
+							<td>No.' . $row->code . '</td>
 						</tr>
 						<tr>
 							<td class="text-right tw-bg-gray-100">Physician</td>
-							<td>'. render_synonyms_name($row->physician_en, $row->physician_kh) .'</td>
+							<td>' . render_synonyms_name($row->physician_en, $row->physician_kh) . '</td>
 							<td width="20%" class="text-right tw-bg-gray-100">Date</td>
-							<td>'. date('d/m/Y H:i', strtotime($row->requested_at)) .'</td>
+							<td>' . date('d/m/Y H:i', strtotime($row->requested_at)) . '</td>
 						</tr>
 						<tr>
 							<td width="20%" class="text-right tw-bg-gray-100">Diagnosis</td>
-							<td colspan="3">'. $row->diagnosis .'</td>
+							<td colspan="3">' . $row->diagnosis . '</td>
 						</tr>
 					</tbody>
 				</table>';
@@ -136,27 +136,27 @@ class PrescriptionController extends Controller
 				$j = 0;
 				$usage_time_str = '';
 				$time_usage = getParentDataSelection('time_usage');
-				foreach ($time_usage as $id => $data){
-					if (in_array($id, explode(',', $detail->usage_times ?? []))){
-						if ($j==0){
+				foreach ($time_usage as $id => $data) {
+					if (in_array($id, explode(',', $detail->usage_times ?? []))) {
+						if ($j == 0) {
 							$usage_time_str = $data;
 							$j++;
-						}else{
-							$usage_time_str .= ' - '. $data;
+						} else {
+							$usage_time_str .= ' - ' . $data;
 						}
 					}
 				}
 				$tbody .= '<tr>
-							<td class="text-center">'. str_pad(++$i, 2, '0', STR_PAD_LEFT) .'</td>
-							<td>'. $detail->medicine_name .'</td>
-							<td class="text-center">'. $detail->qty .'</td>
-							<td class="text-center">'. $detail->upd .'</td>
-							<td class="text-center">'. $detail->nod .'</td>
-							<th class="text-center"><strong>'. $detail->total .'</strong></th>
-							<td>'. $detail->unit .'</td>
-							<td>'. $usage_time_str .'</td>
-							<td>'. $detail->usage_en .'</td>
-							<td>'. $detail->other .'</td>
+							<td class="text-center">' . str_pad(++$i, 2, '0', STR_PAD_LEFT) . '</td>
+							<td>' . $detail->medicine_name . '</td>
+							<td class="text-center">' . $detail->qty . '</td>
+							<td class="text-center">' . $detail->upd . '</td>
+							<td class="text-center">' . $detail->nod . '</td>
+							<th class="text-center"><strong>' . $detail->total . '</strong></th>
+							<td>' . $detail->unit . '</td>
+							<td>' . $usage_time_str . '</td>
+							<td>' . $detail->usage_en . '</td>
+							<td>' . $detail->other . '</td>
 						</tr>';
 			}
 			$body = '<table class="table-form  tw-mt-3 table-detail-result">
@@ -172,16 +172,16 @@ class PrescriptionController extends Controller
 							<th>Usage</th>
 							<th>Note</th>
 						</tr>
-						'. (($tbody=='')? '<tr colspan="10" class="text-center">No result</td>' : $tbody) .'
+						' . (($tbody == '') ? '<tr colspan="10" class="text-center">No result</td>' : $tbody) . '
 					</table>';
-			
+
 			return response()->json([
 				'success' => true,
 				'header' => $header,
 				'body' => $body,
 				'print_url' => route('prescription.print', $row->id),
 			]);
-		}else{
+		} else {
 			return response()->json([
 				'success' => false,
 				'message' => 'X-Ray not found!',
@@ -198,28 +198,28 @@ class PrescriptionController extends Controller
 			'genders.title_en as patient_gender',
 			'doctors.name_en as doctor_en',
 		])
-		->where('prescriptions.id', $id)
-		->with([
-			'detail' => function($q){
-				$q->select([
-					'prescription_details.*',
-					'medicines.name as medicine_name',
-					'data_parents.title_en as usage_en',
-				])
-				->leftJoin('medicines', 'medicines.id', '=', 'prescription_details.medicine_id')
-				->leftJoin('data_parents', 'data_parents.id', '=', 'prescription_details.usage_id');
-			}
-		])
-		->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
-		->leftJoin('data_parents AS genders', 'genders.id', '=', 'patients.gender')
-		->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id')
-		->first();
+			->where('prescriptions.id', $id)
+			->with([
+				'detail' => function ($q) {
+					$q->select([
+						'prescription_details.*',
+						'medicines.name as medicine_name',
+						'data_parents.title_en as usage_en',
+					])
+						->leftJoin('medicines', 'medicines.id', '=', 'prescription_details.medicine_id')
+						->leftJoin('data_parents', 'data_parents.id', '=', 'prescription_details.usage_id');
+				}
+			])
+			->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
+			->leftJoin('data_parents AS genders', 'genders.id', '=', 'patients.gender')
+			->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id')
+			->first();
 		if ($prescription) {
 			$data['row'] = $prescription;
 			$data['usages'] = getParentDataSelection('comsumption');
 			$data['time_usage'] = getParentDataSelection('time_usage');
 			return view('prescription.print', $data);
-		}else{
+		} else {
 			abort(404);
 		}
 	}
@@ -232,7 +232,7 @@ class PrescriptionController extends Controller
 		if ($prescription ?? false) {
 			$data['row'] = $prescription;
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 			$data['medicine'] = Medicine::orderBy('name', 'asc')->get();
 			$data['usages'] = getParentDataSelection('comsumption');
 			$data['time_usage'] = getParentDataSelection('time_usage');
@@ -247,7 +247,7 @@ class PrescriptionController extends Controller
 		if ($prescription ?? false) {
 			$data['row'] = $prescription;
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 			$data['medicine'] = Medicine::orderBy('name', 'asc')->get();
 			$data['usages'] = getParentDataSelection('comsumption');
 			$data['time_usage'] = getParentDataSelection('time_usage');
@@ -284,7 +284,8 @@ class PrescriptionController extends Controller
 		}
 	}
 
-	public function refresh_prescriotion_detail($request, $id_prescription = 0, $is_new = false) {
+	public function refresh_prescriotion_detail($request, $id_prescription = 0, $is_new = false)
+	{
 		// Do update the labor detail
 		$detail_ids = $request->test_id ?: [];
 		$detail_values = [];
@@ -311,7 +312,7 @@ class PrescriptionController extends Controller
 			$tmp_usage_time = [];
 			foreach ($time_usage as $tm_id => $tm_name) {
 				if (
-					isset($request->{'time_usage_' .$val['id']. '_' . $tm_id}) || // For edit
+					isset($request->{'time_usage_' . $val['id'] . '_' . $tm_id}) || // For edit
 					isset($request->{'time_usage_' . $tm_id}[$id]) && $request->{'time_usage_' . $tm_id}[$id] != "OFF" // For create
 				) {
 					$tmp_usage_time[] = $tm_id;
@@ -325,7 +326,7 @@ class PrescriptionController extends Controller
 			foreach ($detail_values as $id => $val) {
 				PrescriptionDetail::find($id)->update($val);
 			}
-	
+
 			// #4, Clean old data when clicked on icon trast/delete
 			if (sizeof($detail_ids) > 0) {
 				$detailToDelete = PrescriptionDetail::where('prescription_id', $id_prescription)->whereNotIn('id', $detail_ids);

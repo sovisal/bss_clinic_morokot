@@ -14,11 +14,11 @@ class DoctorController extends Controller
 	{
 		$data = [
 			'doctors' => Doctor::select([
-										'doctors.*',
-										'updatedBy.name AS updated_by_name',
-									])
-									->join('users AS updatedBy', 'updatedBy.id', '=' ,'doctors.updated_by')
-									->orderBy('name_kh', 'asc')->get()
+				'doctors.*',
+				'updatedBy.name AS updated_by_name',
+			])
+				->join('users AS updatedBy', 'updatedBy.id', '=', 'doctors.updated_by')
+				->orderBy('name_kh', 'asc')->get()
 		];
 		return view('doctor.index', $data);
 	}
@@ -53,7 +53,7 @@ class DoctorController extends Controller
 		$url = route('setting.doctor.index');
 		if ($request->save_opt == 'save_create') {
 			$url = route('setting.doctor.create');
-		}else if($request->save_opt == 'save_edit'){
+		} else if ($request->save_opt == 'save_edit') {
 			$url = route('setting.doctor.edit', $doctor->id);
 		}
 		return redirect($url)->with('success', __('alert.message.success.crud.create'));
@@ -111,6 +111,6 @@ class DoctorController extends Controller
 	// get Product Select2
 	public function getSelect2()
 	{
-		return Doctor::getSelect2([], ['name_kh', 'asc'], ['id', 'name_kh']);
+		return Doctor::getSelect2([], ['id', 'asc'], ['id', 'name_kh']);
 	}
 }

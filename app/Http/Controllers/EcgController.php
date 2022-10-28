@@ -21,11 +21,11 @@ class EcgController extends Controller
 	 */
 	public function index()
 	{
-		$this->data['rows'] = Ecg::where('ecgs.status', '>=' , 1)
+		$this->data['rows'] = Ecg::where('ecgs.status', '>=', 1)
 			->select([
-				'ecgs.*', 
-				'patients.name_en as patient_en', 
-				'patients.name_kh as patient_kh', 
+				'ecgs.*',
+				'patients.name_en as patient_en',
+				'patients.name_kh as patient_kh',
 				'doctors.name_en as doctor_en',
 				'doctors.name_kh as doctor_kh',
 				'ecg_types.name_en as type_en',
@@ -48,7 +48,7 @@ class EcgController extends Controller
 	{
 		$data['type'] = EcgType::where('status', 1)->orderBy('index', 'asc')->get();
 		$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-		$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+		$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		$data['payment_type'] = getParentDataSelection('payment_type');
 		$data['is_edit'] = false;
 		return view('ecg.create', $data);
@@ -87,32 +87,32 @@ class EcgController extends Controller
 			}
 		}
 	}
-	
+
 	/**
 	 * Display the specified resource.
 	 */
 	public function getDetail(Request $request)
 	{
 		$row = Ecg::where('ecgs.id', $request->id)
-		->select([
-			'ecgs.*',
-			'patients.name_en as patient_en',
-			'patients.name_kh as patient_kh',
-			'physicians.name_en as physician_en',
-			'physicians.name_kh as physician_kh',
-			'requestedBy.name_en as requested_en',
-			'requestedBy.name_kh as requested_kh',
-			'paymentTypes.title_en as payment_type_en',
-			'paymentTypes.title_kh as payment_type_kh',
-			'ecg_types.name_en as type_en',
-			'ecg_types.name_kh as type_kh'
-		])
-		->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
-		->leftJoin('data_parents AS paymentTypes', 'paymentTypes.id', '=', 'ecgs.payment_type')
-		->leftJoin('doctors AS physicians', 'physicians.id', '=', 'ecgs.doctor_id')
-		->leftJoin('doctors AS requestedBy', 'requestedBy.id', '=', 'ecgs.requested_by')
-		->leftJoin('ecg_types', 'ecg_types.id', '=', 'ecgs.type')
-		->first();
+			->select([
+				'ecgs.*',
+				'patients.name_en as patient_en',
+				'patients.name_kh as patient_kh',
+				'physicians.name_en as physician_en',
+				'physicians.name_kh as physician_kh',
+				'requestedBy.name_en as requested_en',
+				'requestedBy.name_kh as requested_kh',
+				'paymentTypes.title_en as payment_type_en',
+				'paymentTypes.title_kh as payment_type_kh',
+				'ecg_types.name_en as type_en',
+				'ecg_types.name_kh as type_kh'
+			])
+			->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
+			->leftJoin('data_parents AS paymentTypes', 'paymentTypes.id', '=', 'ecgs.payment_type')
+			->leftJoin('doctors AS physicians', 'physicians.id', '=', 'ecgs.doctor_id')
+			->leftJoin('doctors AS requestedBy', 'requestedBy.id', '=', 'ecgs.requested_by')
+			->leftJoin('ecg_types', 'ecg_types.id', '=', 'ecgs.type')
+			->first();
 
 		if ($row) {
 			$body = '';
@@ -120,8 +120,8 @@ class EcgController extends Controller
 			$attributes = array_except(filter_unit_attr(unserialize($row->attribute) ?: []), ['status', 'amount']);
 			foreach ($attributes as $label => $attr) {
 				$tbody .= '<tr>
-								<td width="30%" class="text-right tw-bg-gray-100">'. __('form.ecg.'. $label) .'</td>
-								<td>'. $attr .'</td>
+								<td width="30%" class="text-right tw-bg-gray-100">' . __('form.ecg.' . $label) . '</td>
+								<td>' . $attr . '</td>
 							</tr>';
 			}
 			$body = '<table class="table-form tw-mt-3 table-detail-result">
@@ -130,7 +130,7 @@ class EcgController extends Controller
 								<th colspan="4" class="text-left tw-bg-gray-100">Result</th>
 							</tr>
 						</thead>
-						<tbody>'. ((empty($attributes))? '<tr><th colspan="4" class="text-center">No result</th></tr>' : $tbody) .'</tbody>
+						<tbody>' . ((empty($attributes)) ? '<tr><th colspan="4" class="text-center">No result</th></tr>' : $tbody) . '</tbody>
 					</table>';
 			return response()->json([
 				'success' => true,
@@ -138,7 +138,7 @@ class EcgController extends Controller
 				'body' => $body,
 				'print_url' => route('para_clinic.ecg.print', $row->id),
 			]);
-		}else{
+		} else {
 			return response()->json([
 				'success' => false,
 				'message' => 'ECG not found!',
@@ -159,11 +159,11 @@ class EcgController extends Controller
 			'doctors.name_en as doctor_en',
 			'ecg_types.name_en as type_en'
 		])
-		->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
-		->leftJoin('data_parents', 'data_parents.id', '=', 'patients.gender')
-		->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id')
-		->leftJoin('ecg_types', 'ecg_types.id', '=', 'ecgs.type')
-		->find($id);
+			->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
+			->leftJoin('data_parents', 'data_parents.id', '=', 'patients.gender')
+			->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id')
+			->leftJoin('ecg_types', 'ecg_types.id', '=', 'ecgs.type')
+			->find($id);
 		$ecg->attribute = array_except(filter_unit_attr(unserialize($ecg->attribute) ?: []), ['status', 'amount', 'payment_type', 'requested_by']);
 		$data['ecg'] = $ecg;
 		return view('ecg.print', $data);
@@ -179,7 +179,7 @@ class EcgController extends Controller
 			$data['row'] = $ecg;
 			$data['type'] = EcgType::where('status', 1)->orderBy('index', 'asc')->get();
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		}
 		$data['payment_type'] = getParentDataSelection('payment_type');
 		$data['is_edit'] = true;
@@ -220,7 +220,7 @@ class EcgController extends Controller
 			$data['row'] = $ecg;
 			$data['type'] = EcgType::where('status', 1)->orderBy('index', 'asc')->get();
 			$data['patient'] = Patient::orderBy('name_en', 'asc')->get();
-			$data['doctor'] = Doctor::orderBy('name_en', 'asc')->get();
+			$data['doctor'] = Doctor::orderBy('id', 'asc')->get();
 		}
 		$data['payment_type'] = getParentDataSelection('payment_type');
 		$data['is_edit'] = true;
