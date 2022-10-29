@@ -377,9 +377,14 @@ function generate_code($prefix, $table_name, $auto_update = true)
 	#3, Get the value and += 1
 
 	$table_info = DB::select("SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_NAME = '{$table_name}';");
-	$obj = unserialize(current($table_info)->TABLE_COMMENT);
+	$table_comment = array_column($table_info, 'TABLE_COMMENT');
+
+	$obj = array_filter($table_comment, 'strlen');
+	$obj = unserialize(current($obj));
+
 	$obj['code_increment'] = $obj['code_increment'] ?? 0;
 	$code_increment = ++$obj['code_increment'];
+	
 	if ($auto_update) {
 		DB::statement("ALTER TABLE {$table_name} COMMENT = '" . serialize($obj) . "';");
 	}
