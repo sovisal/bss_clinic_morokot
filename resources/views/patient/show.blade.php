@@ -132,7 +132,7 @@
 							<th>Action</th>
 						</tr>
 					</x-slot>
-					@foreach($patient->history() as $key => $row)
+					@foreach($patient->history as $key => $row)
 						<tr>
 							<td class="text-center">{{ ++$key }}</td>
 							<td>{{ $row->code }}</td>

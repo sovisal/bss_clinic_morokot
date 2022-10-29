@@ -115,60 +115,69 @@ class PatientController extends Controller
 	{
 		$patient->load([
 			'hasAddress',
-			'prescriptions' => function($q){
+			'invoices' => function ($q) {
 				$q->select([
-					'prescriptions.*', 
-					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
-					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
+					'invoices.*',
+					// 'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
-				->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
-				->leftJoin('doctors as requesters', 'requesters.id', '=', 'prescriptions.requested_by')
-				->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id');
+					// ->leftJoin('patients', 'patients.id', '=', 'invoices.patient_id')
+					->leftJoin('doctors', 'doctors.id', '=', 'invoices.doctor_id');
 			},
-			'labors' => function($q){
+			'prescriptions' => function ($q) {
 				$q->select([
-					'laboratories.*', 
-					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'prescriptions.*',
+					// 'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
 					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
-				->leftJoin('patients', 'patients.id', '=', 'laboratories.patient_id')
-				->leftJoin('doctors as requesters', 'requesters.id', '=', 'laboratories.requested_by')
-				->leftJoin('doctors', 'doctors.id', '=', 'laboratories.doctor_id');
+					// ->leftJoin('patients', 'patients.id', '=', 'prescriptions.patient_id')
+					->leftJoin('doctors as requesters', 'requesters.id', '=', 'prescriptions.requested_by')
+					->leftJoin('doctors', 'doctors.id', '=', 'prescriptions.doctor_id');
 			},
-			'xrays' => function($q){
+			'labors' => function ($q) {
 				$q->select([
-					'xrays.*', 
-					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'laboratories.*',
+					// 'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
 					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
-				->leftJoin('patients', 'patients.id', '=', 'xrays.patient_id')
-				->leftJoin('doctors as requesters', 'requesters.id', '=', 'xrays.requested_by')
-				->leftJoin('doctors', 'doctors.id', '=', 'xrays.doctor_id');
+					// ->leftJoin('patients', 'patients.id', '=', 'laboratories.patient_id')
+					->leftJoin('doctors as requesters', 'requesters.id', '=', 'laboratories.requested_by')
+					->leftJoin('doctors', 'doctors.id', '=', 'laboratories.doctor_id');
 			},
-			'echos' => function($q){
+			'xrays' => function ($q) {
 				$q->select([
-					'echographies.*', 
-					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'xrays.*',
+					// 'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
 					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
-				->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
-				->leftJoin('doctors as requesters', 'requesters.id', '=', 'echographies.requested_by')
-				->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id');
+					// ->leftJoin('patients', 'patients.id', '=', 'xrays.patient_id')
+					->leftJoin('doctors as requesters', 'requesters.id', '=', 'xrays.requested_by')
+					->leftJoin('doctors', 'doctors.id', '=', 'xrays.doctor_id');
 			},
-			'ecgs' => function($q){
+			'echos' => function ($q) {
 				$q->select([
-					'ecgs.*', 
-					'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'echographies.*',
+					// 'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
 					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
 					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
 				])
-				->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
-				->leftJoin('doctors as requesters', 'requesters.id', '=', 'ecgs.requested_by')
-				->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id');
+					// ->leftJoin('patients', 'patients.id', '=', 'echographies.patient_id')
+					->leftJoin('doctors as requesters', 'requesters.id', '=', 'echographies.requested_by')
+					->leftJoin('doctors', 'doctors.id', '=', 'echographies.doctor_id');
+			},
+			'ecgs' => function ($q) {
+				$q->select([
+					'ecgs.*',
+					// 'patients.name_en as patient_en', 'patients.name_kh as patient_kh',
+					'requesters.name_en as requester_en', 'requesters.name_kh as requester_kh',
+					'doctors.name_en as doctor_en', 'doctors.name_kh as doctor_kh',
+				])
+					// ->leftJoin('patients', 'patients.id', '=', 'ecgs.patient_id')
+					->leftJoin('doctors as requesters', 'requesters.id', '=', 'ecgs.requested_by')
+					->leftJoin('doctors', 'doctors.id', '=', 'ecgs.doctor_id');
 			},
 		]);
 		$consultation = Consultation::where('patient_id', $patient->id)->get();
@@ -179,33 +188,38 @@ class PatientController extends Controller
 		} else if (!$exist_consultation) {
 			return redirect()->route('patient.consultation.create', ['patient' => $patient->id]);
 		}
-		
+
 		$history = new Collection;
-		$history = $history->concat($patient->prescriptions->map(function($row){
+		$history = $history->concat($patient->invoices->map(function ($row) {
+			$row->row_type = 'invoice';
+			$row->url = route('invoice.print', $row->id);
+			return $row;
+		}));
+		$history = $history->concat($patient->prescriptions->map(function ($row) {
 			$row->row_type = 'prescription';
 			$row->url = route('prescription.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($patient->labors->map(function($row){
+		}));
+		$history = $history->concat($patient->labors->map(function ($row) {
 			$row->row_type = 'labor';
 			$row->url = route('para_clinic.labor.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($patient->xrays->map(function($row){
+		}));
+		$history = $history->concat($patient->xrays->map(function ($row) {
 			$row->row_type = 'xray';
 			$row->url = route('para_clinic.xray.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($patient->echos->map(function($row){
+		}));
+		$history = $history->concat($patient->echos->map(function ($row) {
 			$row->row_type = 'echo';
 			$row->url = route('para_clinic.echography.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($patient->ecgs->map(function($row){
+		}));
+		$history = $history->concat($patient->ecgs->map(function ($row) {
 			$row->row_type = 'ecg';
 			$row->route_name = 'para_clinic.ecg';
 			return $row;
-		} ));
+		}));
 		$patient->history = $history->sortByDesc('requested_at');
 
 		$data = [

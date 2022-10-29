@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends BaseModel
 {
-    use HasFactory;
+	use HasFactory;
 	protected $guarded = ['id'];
-	
+
 	public function consultations()
 	{
 		return $this->hasMany(Consultation::class, 'patient_id');
@@ -27,36 +27,41 @@ class Patient extends BaseModel
 	public function history()
 	{
 		$history = new collection();
-		$history = $history->concat($this->prescriptions->map(function($row){
+		$history = $history->concat($this->prescriptions->map(function ($row) {
 			$row->row_type = 'prescription';
 			$row->url = route('prescription.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($this->labors->map(function($row){
+		}));
+		$history = $history->concat($this->labors->map(function ($row) {
 			$row->row_type = 'labor';
 			$row->url = route('para_clinic.labor.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($this->xrays->map(function($row){
+		}));
+		$history = $history->concat($this->xrays->map(function ($row) {
 			$row->row_type = 'xray';
 			$row->url = route('para_clinic.xray.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($this->echos->map(function($row){
+		}));
+		$history = $history->concat($this->echos->map(function ($row) {
 			$row->row_type = 'echo';
 			$row->url = route('para_clinic.echography.print', $row->id);
 			return $row;
-		} ));
-		$history = $history->concat($this->ecgs->map(function($row){
+		}));
+		$history = $history->concat($this->ecgs->map(function ($row) {
 			$row->row_type = 'ecg';
 			$row->url = route('para_clinic.ecg.print', $row->id);
 			return $row;
-		} ));
+		}));
 		$history = $history->sortByDesc('requested_at');
-		
-		return $history;
 
+		return $history;
 	}
+
+	public function invoices()
+	{
+		return $this->hasMany(Invoice::class, 'patient_id');
+	}
+
 
 	public function prescriptions()
 	{
@@ -72,7 +77,7 @@ class Patient extends BaseModel
 	{
 		return $this->hasMany(Xray::class, 'patient_id');
 	}
-	
+
 	public function echos()
 	{
 		return $this->hasMany(Echography::class, 'patient_id');
