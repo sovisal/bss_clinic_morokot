@@ -70,7 +70,7 @@ class InvoiceController extends Controller
             'address_id' => update4LevelAddress($request),
             'exchange_rate' => $request->exchange_rate ?: 4100,
             'total' => array_sum($request->total ?: []),
-            'requested_at' => $request->requested_at ?: date('Y-m-d H:i:s'),
+            'requested_at' => $request->inv_date ?: date('Y-m-d H:i:s'),
             'status' => 1,
         ])) {
             $this->refresh_invoice_detail($request, $inv->id, true);
@@ -152,6 +152,7 @@ class InvoiceController extends Controller
             'pt_age' => $request->pt_age ?: $invoice->pt_age,
             'address_id' => update4LevelAddress($request),
             'exchange_rate' => $request->exchange_rate ?: $invoice->exchange_rate,
+            'requested_at' => $request->inv_date ?: $invoice->inv_date,
             'total' => array_sum($request->total ?: []),
             'status' => $request->status ?: 1,
         ])) {
