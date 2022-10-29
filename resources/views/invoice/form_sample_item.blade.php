@@ -5,7 +5,7 @@
         <input type="hidden" name="service_name[]" value="{{ @$item ? $item->service_name : '' }}">
         <x-bss-form.select name="service_id[]" id="" required :select2="false">
             <option value="">Please choose</option>
-            @foreach ($medicine as $data)
+            @foreach ($service as $data)
                 <option value="{{ $data->id }}"
                     {{ @$item && $item->service_id == $data->id ? 'selected' : '' }}
                     data-price="{{ $data->price }}">{{ $data->name }}</option>

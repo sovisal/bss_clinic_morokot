@@ -16,7 +16,7 @@
         $(document).on('change', '[name="patient_id"]', function () {
             let selected = $(this).find(":selected");
             $('[name="pt_code"]').val(selected.data('pt_code'));
-            $('[name="pt_gender"]').val(selected.data('gender'));
+            $('[name="pt_gender"]').val(selected.data('gender')).trigger('change');
             $('[name="pt_age"]').val(selected.data('age'));
         });
 
@@ -46,7 +46,7 @@
                 if (current_select.val()) {
                     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
-                        url: window.route_medicine,
+                        url: window.route_service,
                         type: 'POST',
                         data: {
                             _token : CSRF_TOKEN,
