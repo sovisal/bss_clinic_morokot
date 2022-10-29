@@ -31,7 +31,7 @@
 		</x-card>
 	</form>
 	<div>
-    	<table id="sample_prescription" class="hidden">
+    	<table id="sample_result_row" class="hidden">
 			@include('invoice.form_sample_item')
 		</table>
 	</div>

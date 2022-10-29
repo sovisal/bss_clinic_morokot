@@ -877,8 +877,7 @@ $(document).ready(function () {
 		document.getElementById($(this).data('output')).src = URL.createObjectURL(evt.target.files[0])
 	});
 
-	// Selection medicine when search with no result and press Enter key, then auto create
-	// Medicine of prescription + Service of invoice
+	// Selection medicine when search with no result and press Enter key, then auto createService of invoice
 	$(document).on('keyup', 'select[name="medicine_id[]"] + span + span input.select2-search__field', function(e) {
 		if(e.keyCode === 13) {
 			let current_select = $(this);
@@ -905,34 +904,7 @@ $(document).ready(function () {
 		}
 	});
 	
-	$(document).on('keyup', 'select[name="service_id[]"] + span + span input.select2-search__field', function(e) {
-		if(e.keyCode === 13) {
-			let current_select = $(this);
-			if (current_select.val()) {
-				var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-				$.ajax({
-					url: window.route_medicine,
-					type: 'POST',
-					data: {
-						_token : CSRF_TOKEN,
-						name : current_select.val(),
-						price : '-1', usage_id : '1'
-					},
-					dataType: 'JSON',
-					success: function (data) { 
-						if (data.id) {
-							let newOption = new Option(current_select.val(), data.id, false, false);
-							$('select[name="service_id[]"').append(newOption);
-							current_select.closest('tr').find('select[name="service_id[]"]').val(data.id).trigger('change');
-						}
-					}
-				}); 
-			}
-		}
-	});
-
-	
-	// Selection medicine when search with no result and press Enter key, then auto create
+	// Selection patient when search with no result and press Enter key, then auto create
 	$(document).on('keyup', 'select[name="patient_id"] + span + span input.select2-search__field', function(e) {
 		if(e.keyCode === 13) {
 			let current_select = $(this);

@@ -67,9 +67,9 @@
 	<td>
 		<x-bss-form.input name='remark' value="{{ old('remark', @$row->remark) }}"/>
 	</td>
-	<td class="text-right">Age <small class='required'>*</small></td>
+	<td class="text-right">Age</td>
 	<td>
-		<x-bss-form.input name='pt_age' value="{{ old('pt_age', @$row->pt_age) }}" required :disabled="$is_edit && $row->pt_age"/>
+		<x-bss-form.input name='pt_age' value="{{ old('pt_age', @$row->pt_age) }}" :disabled="$is_edit && $row->pt_age"/>
 	</td>
 </tr>
 <?php 

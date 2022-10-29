@@ -66,7 +66,7 @@ class InvoiceController extends Controller
             'patient_id' => $request->patient_id,
             'pt_code' => $request->pt_code,
             'pt_gender' => $request->pt_gender,
-            'pt_age' => $request->pt_age,
+            'pt_age' => $request->pt_age ?: '0',
             'address_id' => update4LevelAddress($request),
             'exchange_rate' => $request->exchange_rate ?: 4100,
             'total' => array_sum($request->total ?: []),

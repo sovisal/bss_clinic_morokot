@@ -29,20 +29,21 @@
 					</tr>
 				@endforeach
 				<tr>
-					<td colspan="3" class="text-right">Total USD: </td>
-					<th colspan="3" style="text-align: right;">USD {{ number_format($row->total, 2) }}</th>
+					<td colspan="4" class="text-right">Total USD: </td>
+					<th colspan="2" style="text-align: right;">USD {{ number_format($row->total, 2) }}</th>
 				</tr>
 				<tr>
-					<td colspan="3" class="text-right">Echange Rate : </td>
-					<th colspan="3" style="text-align: right;">KHR/USD {{ number_format($row->exchange_rate, 0) }}</th>
+					<td colspan="4" class="text-right">Echange Rate : </td>
+					<th colspan="2" style="text-align: right;">KHR/USD {{ number_format($row->exchange_rate, 0) }}</th>
 				</tr>
 				<tr>
-					<td colspan="3" class="text-right">Total KHR : </td>
-					<th colspan="3" style="text-align: right;">KHR {{ number_format($row->total * $row->exchange_rate, 0) }}</th>
+					<td colspan="4" class="text-right">Total KHR : </td>
+					<th colspan="2" style="text-align: right;">KHR {{ number_format($row->total * $row->exchange_rate, 0) }}</th>
 				</tr>
 			</table>
 		</section>
 		
 		<!-- <div class="bring-this-back">(សូមយកវេជ្ជបញ្ជានេះមកជាមួយ ពេលពិនិត្យលើកក្រោយ)</div> -->
+		<x-para-clinic.print-footer />
 	</section>
 </x-print-layout>

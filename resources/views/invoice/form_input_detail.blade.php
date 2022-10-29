@@ -5,7 +5,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     Result
                     <div>
-                        <x-form.button class="btn-add-medicine" icon="bx bx-plus" label="Add Medicine" />
+                        <!-- <x-form.button class="btn-add-medicine" icon="bx bx-plus" label="Add Medicine" /> -->
+                        <x-form.button class="btn-add-service" icon="bx bx-plus" label="Add Service" />
                     </div>
                 </div>
             </th>
