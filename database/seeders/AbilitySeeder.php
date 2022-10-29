@@ -31,9 +31,20 @@ class AbilitySeeder extends Seeder
 			['module' => 'ParaClinic'],
 			['module' => 'Prescription'],
 			['module' => 'Medicine'],
+			['module' => 'Invoice'],
+			['module' => 'Service'],
 		]);
 
 		Ability::insert([
+			['ability_module_id' => '16', 'category' => 'ViewAny', 'name' => 'ViewAnyService', 'label' => 'Service View List'],
+			['ability_module_id' => '16', 'category' => 'Create', 'name' => 'CreateService', 'label' => 'Service Create'],
+			['ability_module_id' => '16', 'category' => 'Update', 'name' => 'UpdateService', 'label' => 'Service Update'],
+			['ability_module_id' => '16', 'category' => 'Delete', 'name' => 'DeleteService', 'label' => 'Service Delete'],
+
+			['ability_module_id' => '15', 'category' => 'ViewAny', 'name' => 'ViewAnyInvoice', 'label' => 'Invoice View List'],
+			['ability_module_id' => '15', 'category' => 'Create', 'name' => 'CreateInvoice', 'label' => 'Invoice Create'],
+			['ability_module_id' => '15', 'category' => 'Update', 'name' => 'UpdateInvoice', 'label' => 'Invoice Update'],
+			['ability_module_id' => '15', 'category' => 'Delete', 'name' => 'DeleteInvoice', 'label' => 'Invoice Delete'],
 
 			['ability_module_id' => '14', 'category' => 'ViewAny', 'name' => 'ViewAnyMedicine', 'label' => 'Medicine View List'],
 			['ability_module_id' => '14', 'category' => 'Create', 'name' => 'CreateMedicine', 'label' => 'Medicine Create'],
