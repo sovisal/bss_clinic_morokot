@@ -55,7 +55,7 @@ class ServiceController extends Controller
 			'price' => $request->price,
 			'description' => $request->description,
 		]);
-		return back()->with('success', __('alert.message.success.crud.update'));
+		return redirect()->route('invoice.service.index')->with('success', __('alert.message.success.crud.update'));
 	}
 
 	public function destroy(Service $service)

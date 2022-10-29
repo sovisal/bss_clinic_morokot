@@ -8,7 +8,10 @@
             @foreach ($service as $data)
                 <option value="{{ $data->id }}"
                     {{ @$item && $item->service_id == $data->id ? 'selected' : '' }}
-                    data-price="{{ $data->price }}">{{ $data->name }}</option>
+                    data-name="{{ $data->name }}"
+                    data-price="{{ $data->price }}"
+                    data-description="{{ $data->description }}"
+                >{{ $data->name }}</option>
             @endforeach
         </x-bss-form.select>
     </td>
