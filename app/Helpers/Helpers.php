@@ -371,22 +371,14 @@ function render_payment_status($st_num = 0)
 
 function generate_code($prefix, $table_name, $auto_update = true)
 {
-
-	#1, Get info from table
-	#2, Check the current code incremet
-	#3, Get the value and += 1
-
-	$table_info = DB::select("SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_NAME = '{$table_name}';");
-	$table_comment = array_column($table_info, 'TABLE_COMMENT');
-
-	$obj = array_filter($table_comment, 'strlen');
-	$obj = unserialize(current($obj));
-
-	$obj['code_increment'] = $obj['code_increment'] ?? 0;
-	$code_increment = ++$obj['code_increment'];
+	$table_info = DB::select("SELECT increment FROM module_code_generation WHERE module='{$table_name}' AND year = '" . date('Y') . "';");
+	if (sizeof($table_info) == 0) {
+		DB::insert('INSERT INTO module_code_generation (module, increment, year) VALUES (?, ?, ?)', [$table_name, 0, date('Y')]);
+	}
 	
+	$code_increment = $table_info && (reset($table_info)->increment + 1) ?: 1;
 	if ($auto_update) {
-		DB::statement("ALTER TABLE {$table_name} COMMENT = '" . serialize($obj) . "';");
+		DB::update('UPDATE module_code_generation SET increment=increment+1 WHERE module=? AND year=?', [$table_name , date('Y')]);
 	}
 
 	return $prefix . '-' . str_pad($code_increment, 5, "0", STR_PAD_LEFT);
