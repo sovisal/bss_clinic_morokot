@@ -64,7 +64,6 @@ class InvoiceController extends Controller
             'doctor_id' => $request->doctor_id,
             'remark' => $request->remark ?: '',
             'patient_id' => $request->patient_id,
-            'pt_code' => $request->pt_code,
             'pt_gender' => $request->pt_gender,
             'pt_age' => $request->pt_age ?: '0',
             'address_id' => update4LevelAddress($request),

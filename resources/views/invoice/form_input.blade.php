@@ -35,9 +35,14 @@
 	<td>
 		<x-bss-form.input name='inv_date' value="{{ date('Y-m-d H:i:s') }}" required :disabled="$is_edit && $row->inv_date"/>
 	</td>
-	<td class="text-right">PT Code <small class='required'>*</small></td>
+	<td class="text-right">Gender</td>
 	<td>
-		<x-bss-form.input name='pt_code' value="{{ old('pt_code', @$row->pt_code) }}" required :disabled="$is_edit && $row->pt_code"/>
+		<x-bss-form.select name="pt_gender" data-no_search="true" :disabled="$is_edit && $row->pt_gender">
+			<option value="">---- None ----</option>
+			@foreach ($gender as $id => $data)
+				<option value="{{ $id }}" {{ (old('pt_gender', @$row->pt_gender)==$id) ? 'selected' : '' }}>{{ $data }}</option>
+			@endforeach
+		</x-bss-form.select>
 	</td>
 </tr>
 <tr>
@@ -49,14 +54,9 @@
 			@endforeach
 		</x-bss-form.select>
 	</td>
-	<td class="text-right">Gender <small class='required'>*</small></td>
+	<td class="text-right">Age</td>
 	<td>
-		<x-bss-form.select name="pt_gender" data-no_search="true" :disabled="$is_edit && $row->pt_gender">
-			<option value="">---- None ----</option>
-			@foreach ($gender as $id => $data)
-				<option value="{{ $id }}" {{ (old('pt_gender', @$row->pt_gender)==$id) ? 'selected' : '' }}>{{ $data }}</option>
-			@endforeach
-		</x-bss-form.select>
+		<x-bss-form.input name='pt_age' value="{{ old('pt_age', @$row->pt_age) }}" :disabled="$is_edit && $row->pt_age"/>
 	</td>
 </tr>
 <tr>
@@ -64,10 +64,7 @@
 	<td>
 		<x-bss-form.input name='remark' value="{{ old('remark', @$row->remark) }}"/>
 	</td>
-	<td class="text-right">Age</td>
-	<td>
-		<x-bss-form.input name='pt_age' value="{{ old('pt_age', @$row->pt_age) }}" :disabled="$is_edit && $row->pt_age"/>
-	</td>
+	<td colspan="2"></td>
 </tr>
 <?php 
 	$_4level_level = get4LevelAdressSelectorByID(@$row ? $row->address_id : '', ...['xx', 'option']);
