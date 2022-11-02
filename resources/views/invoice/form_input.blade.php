@@ -35,24 +35,7 @@
 	<td>
 		<x-bss-form.input name='inv_date' value="{{ date('Y-m-d H:i:s') }}" required :disabled="$is_edit && $row->inv_date"/>
 	</td>
-	<td class="text-right">PT Code <small class='required'>*</small></td>
-	<td>
-		<x-bss-form.input name='pt_code' value="{{ old('pt_code', @$row->pt_code) }}" required :disabled="$is_edit && $row->pt_code"/>
-	</td>
-</tr>
-<tr>
-	<td class="text-right">Doctor <small class='required'>*</small></td>
-	<td>
-		<x-bss-form.select name="doctor_id" required :disabled="$is_edit && $row->doctor_id">
-			{{-- @if (!$is_edit)
-				<option value="">Please choose</option>
-			@endif --}}
-			@foreach ($doctor as $data)
-				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
-			@endforeach
-		</x-bss-form.select>
-	</td>
-	<td class="text-right">Gender <small class='required'>*</small></td>
+	<td class="text-right">Gender</td>
 	<td>
 		<x-bss-form.select name="pt_gender" data-no_search="true" :disabled="$is_edit && $row->pt_gender">
 			<option value="">---- None ----</option>
@@ -63,14 +46,25 @@
 	</td>
 </tr>
 <tr>
-	<td class="text-right">Remark</td>
+	<td class="text-right">Doctor <small class='required'>*</small></td>
 	<td>
-		<x-bss-form.input name='remark' value="{{ old('remark', @$row->remark) }}"/>
+		<x-bss-form.select name="doctor_id" required :disabled="$is_edit && $row->doctor_id">
+			@foreach ($doctor as $data)
+				<option value="{{ $data->id }}" {{ ($row->doctor_id ?? auth()->user()->doctor ?? false) == $data->id ? 'selected' : '' }} >{{ render_synonyms_name($data->name_en, $data->name_kh) }}</option>
+			@endforeach
+		</x-bss-form.select>
 	</td>
 	<td class="text-right">Age</td>
 	<td>
 		<x-bss-form.input name='pt_age' value="{{ old('pt_age', @$row->pt_age) }}" :disabled="$is_edit && $row->pt_age"/>
 	</td>
+</tr>
+<tr>
+	<td class="text-right">Remark</td>
+	<td>
+		<x-bss-form.input name='remark' value="{{ old('remark', @$row->remark) }}"/>
+	</td>
+	<td colspan="2"></td>
 </tr>
 <?php 
 	$_4level_level = get4LevelAdressSelectorByID(@$row ? $row->address_id : '', ...['xx', 'option']);
