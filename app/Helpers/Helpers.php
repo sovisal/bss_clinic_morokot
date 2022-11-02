@@ -376,7 +376,7 @@ function generate_code($prefix, $table_name, $auto_update = true)
 		DB::insert('INSERT INTO module_code_generation (module, increment, year) VALUES (?, ?, ?)', [$table_name, 0, date('Y')]);
 	}
 	
-	$code_increment = $table_info && (reset($table_info)->increment + 1) ?: 1;
+	$code_increment = $table_info ? ((reset($table_info)->increment) + 1) : 1;
 	if ($auto_update) {
 		DB::update('UPDATE module_code_generation SET increment=increment+1 WHERE module=? AND year=?', [$table_name , date('Y')]);
 	}
