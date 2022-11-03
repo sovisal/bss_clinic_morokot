@@ -230,7 +230,7 @@ class EchographyController extends Controller
 		$serialize = array_except($request->all(), ['_method', '_token', 'img_1', 'img_2']);
 		$request['attribute'] = serialize($serialize);
 		$request['amount'] = $request->amount ?? 0;
-		$request['doctor_id'] = $request->doctor_id ?? 0;
+		// $request['doctor_id'] = $request->doctor_id ?? 0;
 
 		$path = public_path('/images/echographies/');
 		File::makeDirectory($path, 0777, true, true);

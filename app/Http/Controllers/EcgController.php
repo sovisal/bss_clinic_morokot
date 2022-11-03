@@ -195,7 +195,7 @@ class EcgController extends Controller
 		$serialize = array_except($request->all(), ['_method', '_token']);
 		$request['attribute'] = serialize($serialize);
 		$request['amount'] = $request->amount ?? 0;
-		$request['doctor_id'] = $request->doctor_id ?? 0;
+		// $request['doctor_id'] = $request->doctor_id ?? 0;
 
 		if ($ecg->update($request->all())) {
 			return redirect()->route('para_clinic.ecg.index')->with('success', 'Data update success');
