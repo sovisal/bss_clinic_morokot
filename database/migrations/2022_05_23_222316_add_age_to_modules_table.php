@@ -14,13 +14,13 @@ class AddAgeToModulesTable extends Migration
     public function up()
     {
         Schema::table('echographies', function (Blueprint $table) {
-            $table->string('age', 3)->default('0');
+            $table->string('age', 3)->nullable();
         });
         Schema::table('ecgs', function (Blueprint $table) {
-            $table->string('age', 3)->default('0');
+            $table->string('age', 3)->nullable();
         });
         Schema::table('xrays', function (Blueprint $table) {
-            $table->string('age', 3)->default('0');
+            $table->string('age', 3)->nullable();
         });
     }
 
